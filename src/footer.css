@@ -1,0 +1,40 @@
+
+.footer__wrap {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+
+.rss__wrap {
+  background-color: rgb(146, 146, 146);
+  border-radius: 2rem;
+  transition: all .2s;
+}
+.rss__wrap:hover {
+  background-color: rgb(178, 178, 178);
+  transform: scale(1.05);
+  transition: all .2s;
+}
+
+.rss {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  width: 60px;
+  height: 60px;
+  background: url(https://rs.school/images/rs_school_js.svg) no-repeat center;
+}
+
+
+.gh__person {
+  text-decoration: none;
+  color: #79b257;
+  font-size: 28px;
+  transition: all .2s;
+}
+
+.gh__person:hover {
+  color: #93de68;
+  transform: scale(1.05);
+  transition: all .2s;
+}
