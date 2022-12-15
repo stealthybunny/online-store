@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="footer.css">
 </head>
-<body>
+<body class="body">
   <header class="header">
     <a href="./index.html" class="header__store-logo">
       <div class="logo__shopping-bag"></div>
@@ -19,12 +19,11 @@
     </a>
     <div class="header__total">
       <p class="total__text">Cart total:</p>
-      <p class="total__amount">0.00</p>
+      <p class="total__amount">0.00 &euro;</p>
     </div>
     <div class="header__cart">
-      <div class="cart__pic">
-        <div class="cart__quantity"></div>
-      </div>
+      <div class="cart__pic"></div>
+      <div class="cart__quantity">0</div>
     </div>
   </header>
   
@@ -33,7 +32,12 @@
   <footer class="footer">
     <div class="footer__wrap">
       <a class="gh__person" href="https://github.com/stealthybunny" target="_blank">
-        tealthybunny
+        <div class="gh__logo"></div>
+        <span class="gh__id">stealthybunny</span>  
+      </a>
+      <a class="gh__person" href="https://github.com/sssothink" target="_blank">
+        <div class="gh__logo"></div>
+        <span class="gh__id">sssothink</span>  
       </a>
       <div class="birth">
         2022
@@ -41,9 +45,7 @@
       <a class="rss__wrap" href="https://rs.school/js/" target="_blank">
         <div class="rss"></div>
       </a>
-      <a class="gh__person" href="https://github.com/sssothink" target="_blank">
-        sssothink
-      </a>
+      
     </div>
   </footer>
 </body>

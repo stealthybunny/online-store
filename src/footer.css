@@ -1,5 +1,12 @@
+.footer {
+  display: flex;
+  width: 100%;
+  height: 60px;
+  flex: 0 0 auto;
+}
 
 .footer__wrap {
+  width: 100%;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -7,12 +14,14 @@
 
 
 .rss__wrap {
-  background-color: rgb(146, 146, 146);
-  border-radius: 2rem;
+  height: 70px;
+  width: 160px;
+  /* background-color: rgb(146, 146, 146); */
+  /* border-radius: 2rem; */
   transition: all .2s;
 }
 .rss__wrap:hover {
-  background-color: rgb(178, 178, 178);
+  /* background-color: rgb(178, 178, 178); */
   transform: scale(1.05);
   transition: all .2s;
 }
@@ -20,21 +29,42 @@
 .rss {
   margin-left: 1rem;
   margin-right: 1rem;
-  width: 60px;
+  width: 120px;
   height: 60px;
-  background: url(https://rs.school/images/rs_school_js.svg) no-repeat center;
+  background-image: url(./assets/svg/rsschool.svg);
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
+.gh__logo {
+  width: 20px;
+  height: 20px;
+  background-image: url(./assets/svg/github.svg);
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
 
+.gh__id {
+  font-size: 16px;
+}
 .gh__person {
   text-decoration: none;
   color: #79b257;
   font-size: 28px;
   transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .gh__person:hover {
   color: #93de68;
   transform: scale(1.05);
   transition: all .2s;
+}
+
+.birth {
+  color: #79b257;
 }
