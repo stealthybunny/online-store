@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="footer.css">
 </head>
-<body>
+<body class="body">
   <header class="header">
     <a href="./index.html" class="header__store-logo">
       <div class="logo__shopping-bag"></div>
@@ -19,21 +19,60 @@
     </a>
     <div class="header__total">
       <p class="total__text">Cart total:</p>
-      <p class="total__amount">0.00</p>
+      <p class="total__amount">0.00 &euro;</p>
     </div>
     <div class="header__cart">
-      <div class="cart__pic">
-        <div class="cart__quantity"></div>
-      </div>
+      <div class="cart__pic"></div>
+      <div class="cart__quantity">0</div>
     </div>
   </header>
   
-  <main class="main"></main>
+  <main class="main">
+    <aside class="filter__section">
+      <div class="filter__buttons">
+        <button class="reset__button filter__button">Reset</button>
+        <button class="copy-link__button filter__button">Copy Link</button>
+      </div>
+      <div class="filter__by-catgory filter__block">
+        <div class="block__head">
+          <h3 class="block__headliner">Category</h3>
+        </div>
+        <div class="block__field"></div>
+      </div>
+      <div class="filter__by-brand filter__block">
+        <div class="block__head">
+          <h3 class="block__headliner">Brand</h3>
+        </div>
+        <div class="block__field"></div>
+      </div>
+      <div class="filter__by-price filter__block">
+        <div class="block__head">
+          <h3 class="block__headliner">Price</h3>
+        </div>
+        <div class="selector__filed"></div>
+      </div>
+      <div class="filter__by-stock filter__block">
+        <div class="block__head">
+          <h3 class="block__headliner">Stock</h3>
+        </div>
+        <div class="selector__filed"></div>
+      </div>
+    </aside>
+    <div class="products__block">
+      <div class="products__header"></div>
+
+    </div>
+  </main>
 
   <footer class="footer">
     <div class="footer__wrap">
       <a class="gh__person" href="https://github.com/stealthybunny" target="_blank">
-        tealthybunny
+        <div class="gh__logo"></div>
+        <span class="gh__id">stealthybunny</span>  
+      </a>
+      <a class="gh__person" href="https://github.com/sssothink" target="_blank">
+        <div class="gh__logo"></div>
+        <span class="gh__id">sssothink</span>  
       </a>
       <div class="birth">
         2022
@@ -41,9 +80,7 @@
       <a class="rss__wrap" href="https://rs.school/js/" target="_blank">
         <div class="rss"></div>
       </a>
-      <a class="gh__person" href="https://github.com/sssothink" target="_blank">
-        sssothink
-      </a>
+      
     </div>
   </footer>
 </body>
