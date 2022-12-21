@@ -2,9 +2,10 @@ export default abstract class Page {
   protected container: HTMLElement;
   static TextObject = {};
 
-  constructor(id: string) {
+  constructor(id: string, className: string) {
     this.container = document.createElement('main');
     this.container.id = id;
+    this.container.className = className;
   }
 
   protected createPageTitle(text: string) {
@@ -12,6 +13,7 @@ export default abstract class Page {
   }
 
   protected createHeaderTitle(text: string) {
+    console.log(text);
     const headerTitle = document.createElement('h1');
     headerTitle.innerText = text;
     return headerTitle;
