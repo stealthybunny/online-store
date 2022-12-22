@@ -13,7 +13,6 @@ export default abstract class Page {
   }
 
   protected createHeaderTitle(text: string) {
-    console.log(text);
     const headerTitle = document.createElement('h1');
     headerTitle.innerText = text;
     return headerTitle;

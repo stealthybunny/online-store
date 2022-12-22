@@ -11,6 +11,8 @@ body {
   background-color: rgba(20, 20, 20, 0.801);
   width: 100%;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .main {
@@ -141,3 +143,4 @@ color: #79b257;
 .birth {
   color: #79b257;
 }
+

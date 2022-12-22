@@ -5,7 +5,7 @@ import ProductDetails from '../product-details/index';
 import NotFound from '../404/index';
 
 const enum Pages {
-  MainPage = 'main-page',
+  MainPage = ``,
   ProductDetails = 'product-details',
   CartPage = 'cart-page',
 }
@@ -14,22 +14,25 @@ export default class App {
   private container: HTMLElement;
   private initialPage: MainPage;
 
-  static renderNewPage(pageID: string, className: string) {
+  static renderNewPage(pageID: string, className: string, productID?: number) {
     const el = document.querySelectorAll('.main');
     if (el) {
       el.forEach((item) => {
         item.parentNode?.removeChild(item);
-        console.log('removed');
       });
     }
     let page: Page | null = null;
 
     if (pageID === Pages.MainPage) {
-      page = new MainPage(pageID, className);
+      page = new MainPage('main-page', className);
     } else if (pageID === Pages.CartPage) {
       page = new CartPage(pageID, className);
     } else if (pageID === Pages.ProductDetails) {
-      page = new ProductDetails(pageID, className);
+      if (productID && productID > 0 && productID <= 100) {
+        page = new ProductDetails(pageID, className, productID);
+      } else {
+        page = new NotFound('error-page', className);
+      }
     } else {
       page = new NotFound('error-page', className);
     }
@@ -43,8 +46,10 @@ export default class App {
 
   private enableRouteChange() {
     window.addEventListener('hashchange', () => {
-      const hash = window.location.hash.slice(1);
-      App.renderNewPage(hash, 'main');
+      const hash = window.location.hash.slice(1).split('#')[0];
+      const productID = Number(window.location.hash.slice(1).split('#')[1]);
+
+      App.renderNewPage(hash, 'main', productID);
     });
   }
 
@@ -54,7 +59,7 @@ export default class App {
   }
 
   run() {
-    App.renderNewPage('main-page', 'main');
+    App.renderNewPage('', 'main');
     this.enableRouteChange();
   }
 }
