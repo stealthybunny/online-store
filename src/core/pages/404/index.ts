@@ -1,8 +1,9 @@
 import Page from '../../templates/page';
+import './404.css';
 
 export default class NotFound extends Page {
   static TextObject = {
-    MainTitle: 'Page Not Found',
+    MainTitle: 'Error 404: page not found',
   };
 
   constructor(id: string, className: string) {
