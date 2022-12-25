@@ -45,14 +45,14 @@ const baseConfig = {
             patterns: [
                 { from: "src/assets", to: "assets" },
                 // { from: "other", to: "public" },
-            ],
-        }),
-    ]      
+      ],
+    }),
+  ]
 };
 
 module.exports = ({ mode }) => {
-    const isProductionMode = mode === 'prod';
-    const envConfig = isProductionMode ? require('./webpack.prod.config') : require('./webpack.dev.config');
+  const isProductionMode = mode === 'prod';
+  const envConfig = isProductionMode ? require('./webpack.prod.config') : require('./webpack.dev.config');
 
-    return merge(baseConfig, envConfig);
+  return merge(baseConfig, envConfig);
 };

@@ -1,6 +1,5 @@
 import { JSONresponse } from '../types';
 import { createList, createProducts } from './createPageElements';
-
 export default function getData() {
   fetch('https://dummyjson.com/products?limit=100')
     .then((response) => {
