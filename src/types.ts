@@ -9,7 +9,7 @@ export interface productDatum {
   brand: string;
   category: string;
   thumbnail: string;
-  imgaes: string[];
+  images: string[];
 }
 
 export interface JSONresponse {

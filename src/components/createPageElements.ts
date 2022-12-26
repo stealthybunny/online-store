@@ -19,7 +19,8 @@ export function createList(data: string[], place: HTMLTemplateElement): void {
 
 export function createProducts(productData: productDatum[], place: HTMLTemplateElement): void {
   productData.forEach((el) => {
-    const productBox = document.createElement('div');
+    const productBox = document.createElement('a');
+    productBox.href = `#product-details#${el.id}`;
     productBox.classList.add('product-box');
     productBox.style.backgroundImage = `url(${el.thumbnail})`;
 

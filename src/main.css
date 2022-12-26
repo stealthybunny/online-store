@@ -93,6 +93,8 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  outline: none;
+  text-decoration: none;
 }
 
 .product-box__title {
