@@ -113,20 +113,36 @@ modalWrap?.addEventListener('click', (e) => {
 inputName.addEventListener('blur', () => {
   if (inputName.value != '') {
     if (inputName.value.split(' ').length < 2) {
-      personName.appendChild(textError);
+      if (!personName.querySelector('.error')) {
+        const textError = document.createElement('div');
+        textError.className = 'error';
+        textError.innerHTML = 'error';
+        personName.appendChild(textError);
+        return;
+      }
     } else {
-      if (personName.contains(textError)) {
-        personName.removeChild(textError);
+      if (personName.querySelector('.error')) {
+        personName.removeChild(personName.querySelector('.error') as Element);
       }
     }
     for (let i = 0; i < inputName.value.split(' ').length; i++) {
       if (inputName.value.split(' ')[i].split('').length < 3) {
-        personName.appendChild(textError);
-        return;
+        if (!personName.querySelector('.error')) {
+          const textError = document.createElement('div');
+          textError.className = 'error';
+          textError.innerHTML = 'error';
+          personName.appendChild(textError);
+          return;
+        }
       }
       if (inputName.value.split(' ')[i].split('')[0] != inputName.value.split(' ')[i].split('')[0].toUpperCase()) {
-        personName.appendChild(textError);
-        return;
+        if (!personName.querySelector('.error')) {
+          const textError = document.createElement('div');
+          textError.className = 'error';
+          textError.innerHTML = 'error';
+          personName.appendChild(textError);
+          return;
+        }
       }
     }
   }
@@ -134,19 +150,35 @@ inputName.addEventListener('blur', () => {
 inputAdress.addEventListener('blur', () => {
   if (inputAdress.value != '') {
     if (inputAdress.value.split(' ').length < 2) {
-      adress.appendChild(textError);
+      if (!adress.querySelector('.error')) {
+        const textError = document.createElement('div');
+        textError.className = 'error';
+        textError.innerHTML = 'error';
+        adress.appendChild(textError);
+      }
+      return;
     } else {
-      if (adress.contains(textError)) {
-        adress.removeChild(textError);
+      if (adress.querySelector('.error')) {
+        adress.removeChild(adress.querySelector('.error') as Element);
       }
     }
     for (let i = 0; i < inputAdress.value.split(' ').length; i++) {
       if (inputAdress.value.split(' ')[i].split('').length < 5) {
-        adress.appendChild(textError);
+        if (!adress.querySelector('.error')) {
+          const textError = document.createElement('div');
+          textError.className = 'error';
+          textError.innerHTML = 'error';
+          adress.appendChild(textError);
+        }
         return;
       }
       if (inputAdress.value.split(' ')[i].split('')[0] != inputAdress.value.split(' ')[i].split('')[0].toUpperCase()) {
-        adress.appendChild(textError);
+        if (!adress.querySelector('.error')) {
+          const textError = document.createElement('div');
+          textError.className = 'error';
+          textError.innerHTML = 'error';
+          adress.appendChild(textError);
+        }
         return;
       }
     }
@@ -156,20 +188,26 @@ inputPhone.type = 'text';
 inputPhone.addEventListener('blur', () => {
   if (inputPhone.value != '') {
     if (inputPhone.value.split('')[0] != '+' || inputPhone.value.split('').length < 9) {
-      if (!phoneNumber.contains(textError)) {
+      if (!phoneNumber.querySelector('.error')) {
+        const textError = document.createElement('div');
+        textError.className = 'error';
+        textError.innerHTML = 'error';
         phoneNumber.appendChild(textError);
-        return;
       }
+      return;
     } else {
       for (let i = 1; i < inputPhone.value.split('').length; i++) {
         if (Number.isNaN(Number(inputPhone.value.split('')[i]))) {
-          if (!phoneNumber.contains(textError)) {
+          if (!phoneNumber.querySelector('.error')) {
+            const textError = document.createElement('div');
+            textError.className = 'error';
+            textError.innerHTML = 'error';
             phoneNumber.appendChild(textError);
-            return;
           }
+          return;
         } else {
-          if (phoneNumber.contains(textError)) {
-            phoneNumber.removeChild(textError);
+          if (phoneNumber.querySelector('.error')) {
+            phoneNumber.removeChild(phoneNumber.querySelector('.error') as Element);
           }
         }
       }
@@ -178,83 +216,256 @@ inputPhone.addEventListener('blur', () => {
 });
 inputEmail.type = 'text';
 inputEmail.addEventListener('blur', () => {
-  let str = '@';
-  let k = 0;
-  for (let i = 1; i < inputEmail.value.split('').length; i++) {
-    if (inputEmail.value.split('')[i] == str) {
-      if (str == '.') {
-        if (email.contains(textError)) {
-          email.removeChild(textError);
+  if (inputEmail.value != '') {
+    let str = '@';
+    let k = 0;
+    for (let i = 1; i < inputEmail.value.split('').length; i++) {
+      if (inputEmail.value.split('')[i] == str) {
+        if (str == '.') {
+          if (email.querySelector('.error')) {
+            email.removeChild(email.querySelector('.error') as Element);
+          }
+          break;
+        } else {
+          if (!email.querySelector('.error')) {
+            const textError = document.createElement('div');
+            textError.className = 'error';
+            textError.innerHTML = 'error';
+            email.appendChild(textError);
+          }
         }
-        break;
-      } else {
-        if (!email.contains(textError)) {
-          email.appendChild(textError);
-        }
-      }
-      str = '.';
-      i++;
-    } else {
-      if (!email.contains(textError)) {
-        email.appendChild(textError);
+        str = '.';
+        i++;
       }
     }
-  }
-  for (let i = 0; i < inputEmail.value.split('').length; i++) {
-    if (inputEmail.value.split('')[i] == '@') {
-      k = k + 1;
-      if (k > 1) {
-        if (!email.contains(textError)) {
-          email.appendChild(textError);
+    for (let i = 0; i < inputEmail.value.split('').length; i++) {
+      if (inputEmail.value.split('')[i] == '@') {
+        k = k + 1;
+        if (k > 1) {
+          if (!email.querySelector('.error')) {
+            const textError = document.createElement('div');
+            textError.className = 'error';
+            textError.innerHTML = 'error';
+            email.appendChild(textError);
+          }
+          return;
         }
+      }
+    }
+    for (let i = 0; i < inputEmail.value.split('').length; i++) {
+      if (inputEmail.value.split('').reverse()[i] == '.') {
+        if (i > 1) {
+          if (email.querySelector('.error')) {
+            email.removeChild(email.querySelector('.error') as Element);
+          }
+        } else {
+          if (!email.querySelector('.error')) {
+            const textError = document.createElement('div');
+            textError.className = 'error';
+            textError.innerHTML = 'error';
+            email.appendChild(textError);
+          }
+          return;
+        }
+        break;
+      }
+    }
+    for (let i = 0; i < inputEmail.value.split('').length; i++) {
+      if (inputEmail.value.split('')[i] == '.') {
+        if (inputEmail.value.split('')[i + 1] == '.') {
+          if (!email.querySelector('.error')) {
+            const textError = document.createElement('div');
+            textError.className = 'error';
+            textError.innerHTML = 'error';
+            email.appendChild(textError);
+          }
+          return;
+        }
+      }
+    }
+    for (let i = 0; i < inputEmail.value.split('').length; i++) {
+      if (inputEmail.value.split('')[i] == '@') {
+        if (inputEmail.value.split('')[i + 1] == '.') {
+          if (!email.querySelector('.error')) {
+            const textError = document.createElement('div');
+            textError.className = 'error';
+            textError.innerHTML = 'error';
+            email.appendChild(textError);
+          }
+          return;
+        }
+      }
+    }
+    for (let i = 0; i < inputEmail.value.split('').length; i++) {
+      if (inputEmail.value.split('')[i] == '.') {
+        if (inputEmail.value.split('')[i + 1] == '@') {
+          if (!email.querySelector('.error')) {
+            const textError = document.createElement('div');
+            textError.className = 'error';
+            textError.innerHTML = 'error';
+            email.appendChild(textError);
+          }
+          return;
+        }
+      }
+    }
+    if (inputEmail.value.split('')[0] === '@') {
+      if (!email.querySelector('.error')) {
+        const textError = document.createElement('div');
+        textError.className = 'error';
+        textError.innerHTML = 'error';
+        email.appendChild(textError);
+      }
+      return;
+    }
+    if (k === 0) {
+      if (!email.querySelector('.error')) {
+        const textError = document.createElement('div');
+        textError.className = 'error';
+        textError.innerHTML = 'error';
+        email.appendChild(textError);
+      }
+      return;
+    }
+  }
+});
+numberCardInput.maxLength = 19;
+numberCardInput.addEventListener('input', () => {
+  if (numberCardInput.value.split('')[0] === '4') {
+    imgPayment.src = 'https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png';
+  } else if (numberCardInput.value.split('')[0] === '5') {
+    imgPayment.src = 'https://www.mastercard.hu/content/dam/public/mastercardcom/eu/hu/images/mc-logo-52.svg';
+  } else if (numberCardInput.value.split('')[0] === '3') {
+    imgPayment.src = 'https://m.oborudunion.ru/logo/4243102.jpg';
+  } else {
+    imgPayment.src =
+      'https://i.guim.co.uk/img/media/b73cc57cb1d46ae742efd06b6c58805e8600d482/16_0_2443_1466/master/2443.jpg?width=700&quality=85&auto=format&fit=max&s=fb1dca6cdd4589cd9ef2fc941935de71';
+  }
+});
+numberCardInput.addEventListener('keypress', (e) => {
+  if (e.key === ' ' || Number.isNaN(Number(e.key))) {
+    e.preventDefault();
+  }
+  if (numberCardInput.value.length === 4 || numberCardInput.value.length === 9 || numberCardInput.value.length === 14) {
+    numberCardInput.value += ' ';
+  }
+  if (numberCardInput.value.length === 19) {
+    if (cardData.querySelector('.error')) {
+      cardData.removeChild(cardData.querySelector('.error') as Element);
+    }
+  }
+});
+inputDate.maxLength = 5;
+inputDate.addEventListener('keypress', (e) => {
+  if (e.key === ' ' || Number.isNaN(Number(e.key))) {
+    e.preventDefault();
+  }
+  if (inputDate.value.length === 5) {
+    if (cardData.querySelector('.error')) {
+      cardData.removeChild(cardData.querySelector('.error') as Element);
+    }
+  }
+  if (inputDate.value.length === 2) {
+    inputDate.value += '/';
+  }
+  if (Number(inputDate.value.split('')[0]) == 0 && Number(inputDate.value.split('')[1]) == 0) {
+    if (!cardData.querySelector('.error')) {
+      const textError = document.createElement('div');
+      textError.className = 'error';
+      textError.innerHTML = 'error';
+      cardData.appendChild(textError);
+    }
+    return;
+  }
+  if (Number(inputDate.value.split('')[0]) > 1) {
+    if (!cardData.querySelector('.error')) {
+      const textError = document.createElement('div');
+      textError.className = 'error';
+      textError.innerHTML = 'error';
+      cardData.appendChild(textError);
+    }
+    return;
+  } else {
+    if (Number(inputDate.value.split('')[1]) > 2) {
+      if (!cardData.querySelector('.error')) {
+        const textError = document.createElement('div');
+        textError.className = 'error';
+        textError.innerHTML = 'error';
+        cardData.appendChild(textError);
         return;
       }
     }
-  }
-  for (let i = 0; i < inputEmail.value.split('').length; i++) {
-    if (inputEmail.value.split('').reverse()[i] == '.') {
-      if (i > 1) {
-        if (email.contains(textError)) {
-          email.removeChild(textError);
-        }
-      } else {
-        if (!email.contains(textError)) {
-          email.appendChild(textError);
-        }
-      }
-      break;
+    if (cardData.querySelector('.error')) {
+      cardData.removeChild(cardData.querySelector('.error') as Element);
     }
   }
-  for (let i = 0; i < inputEmail.value.split('').length; i++) {
-    if (inputEmail.value.split('')[i] == '.') {
-      if (inputEmail.value.split('')[i + 1] == '.') {
-        if (!email.contains(textError)) {
-          email.appendChild(textError);
-        }
-      }
+});
+inputCvv.maxLength = 3;
+inputCvv.addEventListener('keypress', (e) => {
+  if (e.key === ' ' || Number.isNaN(Number(e.key))) {
+    e.preventDefault();
+  }
+  if (inputCvv.value.length === 3) {
+    if (cardData.querySelector('.error')) {
+      cardData.removeChild(cardData.querySelector('.error') as Element);
     }
   }
-  for (let i = 0; i < inputEmail.value.split('').length; i++) {
-    if (inputEmail.value.split('')[i] == '@') {
-      if (inputEmail.value.split('')[i + 1] == '.') {
-        if (!email.contains(textError)) {
-          email.appendChild(textError);
-        }
-      }
+});
+btnModal.addEventListener('click', () => {
+  if (inputName.value === '') {
+    if (!phoneNumber.querySelector('.error')) {
+      const textError = document.createElement('div');
+      textError.className = 'error';
+      textError.innerHTML = 'error';
+      personName.appendChild(textError);
     }
   }
-  for (let i = 0; i < inputEmail.value.split('').length; i++) {
-    if (inputEmail.value.split('')[i] == '.') {
-      if (inputEmail.value.split('')[i + 1] == '@') {
-        if (!email.contains(textError)) {
-          email.appendChild(textError);
-        }
-      }
+  if (inputCvv.value.length < 3) {
+    if (!cardData.querySelector('.error')) {
+      const textError = document.createElement('div');
+      textError.className = 'error';
+      textError.innerHTML = 'error';
+      cardData.appendChild(textError);
     }
   }
-  if (inputEmail.value.split('')[0] === '@') {
-    if (!email.contains(textError)) {
+  if (inputDate.value.length < 5) {
+    if (!cardData.querySelector('.error')) {
+      const textError = document.createElement('div');
+      textError.className = 'error';
+      textError.innerHTML = 'error';
+      cardData.appendChild(textError);
+    }
+  }
+  if (inputAdress.value === '') {
+    if (!phoneNumber.querySelector('.error')) {
+      const textError = document.createElement('div');
+      textError.className = 'error';
+      textError.innerHTML = 'error';
+      adress.appendChild(textError);
+    }
+  }
+  if (inputPhone.value === '') {
+    if (!phoneNumber.querySelector('.error')) {
+      const textError = document.createElement('div');
+      textError.className = 'error';
+      textError.innerHTML = 'error';
+      phoneNumber.appendChild(textError);
+    }
+  }
+  if (inputEmail.value === '') {
+    if (!email.querySelector('.error')) {
+      const textError = document.createElement('div');
+      textError.className = 'error';
+      textError.innerHTML = 'error';
       email.appendChild(textError);
+    }
+  }
+  if (numberCardInput.value.length < 19) {
+    if (!cardData.querySelector('.error')) {
+      const textError = document.createElement('div');
+      textError.className = 'error';
+      textError.innerHTML = 'error';
+      cardData.appendChild(textError);
     }
   }
 });

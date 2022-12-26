@@ -179,6 +179,7 @@
   align-items: center;
   padding-top: 1rem;
   padding-bottom: 1rem;
+  color: white;
 }
 
 
@@ -243,6 +244,10 @@
 
 .other__input {
   width: 65px;
+  font-size: 14px;
+}
+
+.other__input::placeholder {
   font-size: 12px;
 }
 
