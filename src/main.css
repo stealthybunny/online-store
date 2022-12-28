@@ -78,7 +78,7 @@
   padding: 2.5%;
 
 }
-
+/* -------------------------productBox---------------------- */
 .product-box {
   width: 32%;
   height: 160px;
@@ -95,6 +95,7 @@
   flex-direction: column;
   outline: none;
   text-decoration: none;
+  position: relative;
 }
 
 .product-box__title {
@@ -118,15 +119,15 @@
   font-style: italic;
 }
 
+.addBtn {
+  width: 50%;
+  height: 30px;
+  position: relative;
+  z-index: 10;
+}
 
-
-
-
-
-
-
+/* ----------------------------- productBOx End ------------------- */
 /* -----------------------------   CART  -------------------------------------------------- */
-
 
 .btn__wrap {
   margin-top: 2rem;
@@ -259,3 +260,4 @@
   background-color: #971212;
   text-align: center;
 }
+/* ---------------------------------------CART END -------------------------------- */
