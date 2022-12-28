@@ -1,6 +1,7 @@
 import { JSONresponse, productDatum } from '../../../types';
 import Page from '../../templates/page';
 import './product-details.css';
+// import createPopap from '../../../modal';
 
 export default class ProductDetails extends Page {
   static TextObject = {
@@ -114,6 +115,10 @@ export default class ProductDetails extends Page {
     buyBtn.className = 'product-details__buy';
     productBuy.append(buyBtn);
     buyBtn.innerText = 'BUY NOW';
+    buyBtn.addEventListener('click', () => {
+      window.location.assign('#cart-page');
+      localStorage.setItem('clickButton', 'true');
+    });
 
     const cartBtn = document.createElement('button');
     cartBtn.className = 'product-details__to-cart';
@@ -134,10 +139,7 @@ export default class ProductDetails extends Page {
 
   render() {
     this.createPageTitle(ProductDetails.TextObject.MainTitle);
-    // this.createProductPageElements();
     this.createProducDesription(this.productID - 1);
-    // const title = this.createHeaderTitle(ProductDetails.TextObject.MainTitle +',' + this.productID.toString());
-    // this.container.append(title);
     return this.container;
   }
 }

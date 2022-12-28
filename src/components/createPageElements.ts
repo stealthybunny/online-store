@@ -49,7 +49,6 @@ export function createProducts(productData: productDatum[], place: HTMLTemplateE
       paragraph.appendChild(span);
       descriptionBox.appendChild(paragraph);
     }
-
     productBox.appendChild(boxTitle);
     productBox.appendChild(descriptionBox);
     place.appendChild(productBox);
