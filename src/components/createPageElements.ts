@@ -30,7 +30,6 @@ export function createProducts(productData: productDatum[], place: HTMLTemplateE
     // window.localStorage.setItem('online_store__total_discount', `${totalCost}.00 \u20ac`);
   } else {
     const totalCost: string = window.localStorage.getItem('online_store__total') as string;
-    console.log(totalCost);
     total.innerText = `${totalCost}`;
   }
 
