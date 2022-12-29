@@ -1,4 +1,5 @@
 import { productDatum, lsObject } from '../types';
+import { checkLS, addToCartListener } from './addToCart';
 
 export function createList(data: string[], place: HTMLTemplateElement): void {
   data.forEach((el) => {
@@ -12,16 +13,27 @@ export function createList(data: string[], place: HTMLTemplateElement): void {
     label.setAttribute('for', `${el}`);
     checkBoxLine.appendChild(checkBox);
     checkBoxLine.appendChild(label);
-
     place.appendChild(checkBoxLine);
   });
 }
 
 export function createProducts(productData: productDatum[], place: HTMLTemplateElement): void {
+  const cartAmount: HTMLElement = document.querySelector('.cart__quantity') as HTMLElement;
+  const total: HTMLElement = document.querySelector('.total__amount') as HTMLElement;
   if (!window.localStorage.getItem('online_store__storage')) {
     const piece: lsObject[] = [];
     window.localStorage.setItem('online_store__storage', JSON.stringify(piece));
   }
+  if (!window.localStorage.getItem('online_store__total')) {
+    const totalCost = 0;
+    window.localStorage.setItem('online_store__total', `${totalCost}.00 \u20ac`);
+    // window.localStorage.setItem('online_store__total_discount', `${totalCost}.00 \u20ac`);
+  } else {
+    const totalCost: string = window.localStorage.getItem('online_store__total') as string;
+    console.log(totalCost);
+    total.innerText = `${totalCost}`;
+  }
+
   productData.forEach((el) => {
     const productBox = document.createElement('div');
     productBox.classList.add('product-box');
@@ -61,51 +73,18 @@ export function createProducts(productData: productDatum[], place: HTMLTemplateE
     function addButton(element?: HTMLElement) {
       const addOrDropBtn = document.createElement('button');
       addOrDropBtn.className = 'addBtn';
-
-      // console.log(objKeys)
       element?.append(addOrDropBtn);
-      function check() {
-        const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
-        const storageKeys = storage.map((el) => el.id);
-        if (storageKeys.includes(el.id)) {
-          addOrDropBtn.innerText = 'Drop from Cart';
-        } else {
-          addOrDropBtn.innerText = 'Add to Cart';
-        }
-      }
-      check();
+
+      checkLS(total, cartAmount, addOrDropBtn, el);
 
       addOrDropBtn.addEventListener('click', () => {
-        const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
-        const storageKeys = storage.map((el) => el.id);
-        if (storageKeys.includes(el.id)) {
-          window.localStorage.removeItem('online_store__storage');
-          storage.forEach((item, index) => {
-            if (item.id === el.id) {
-              storage.splice(index, 1);
-            }
-          });
-          window.localStorage.setItem('online_store__storage', JSON.stringify(storage));
-          check();
-          window.location.assign('#');
-        } else {
-          window.localStorage.removeItem('online_store__storage');
-          const temp = {
-            id: el.id,
-            amount: 1,
-          };
-          storage.push(temp);
-          window.localStorage.setItem('online_store__storage', JSON.stringify(storage));
-          check();
-          window.location.assign('#');
-        }
+        addToCartListener(total, cartAmount, addOrDropBtn, el);
       });
     }
 
     boxWrapper.appendChild(boxTitle);
     boxWrapper.appendChild(descriptionBox);
     addButton(productBox);
-    // productBox.append(addOrDropBtn);
     place.appendChild(productBox);
   });
 }

@@ -20,6 +20,9 @@ export interface JSONresponse {
 }
 
 export type lsObject = {
-  id?: number;
-  amount?: number;
+  id: number;
+  amount: number;
+  price: number;
+  discount: number;
+  itemData: productDatum;
 };

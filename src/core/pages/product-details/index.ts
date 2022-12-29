@@ -1,6 +1,7 @@
 import { JSONresponse, productDatum } from '../../../types';
 import Page from '../../templates/page';
 import './product-details.css';
+import { addToCartListener, checkLS } from '../../../components/addToCart';
 // import createPopap from '../../../modal';
 
 export default class ProductDetails extends Page {
@@ -120,10 +121,16 @@ export default class ProductDetails extends Page {
       localStorage.setItem('clickButton', 'true');
     });
 
+    const cartAmount: HTMLElement = document.querySelector('.cart__quantity') as HTMLElement;
+    const total: HTMLElement = document.querySelector('.total__amount') as HTMLElement;
+
     const cartBtn = document.createElement('button');
     cartBtn.className = 'product-details__to-cart';
     productBuy.append(cartBtn);
-    cartBtn.innerText = 'ADD TO CART';
+    checkLS(total, cartAmount, cartBtn, datum);
+    cartBtn.addEventListener('click', () => {
+      addToCartListener(total, cartAmount, cartBtn, datum);
+    });
   }
 
   private createProducDesription(productID: number) {

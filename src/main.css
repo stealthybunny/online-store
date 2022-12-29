@@ -93,9 +93,12 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.product-box__wrapper {
   outline: none;
   text-decoration: none;
-  position: relative;
 }
 
 .product-box__title {
@@ -107,7 +110,6 @@
   font-size: 90%;
   padding-top: 2%;
 }
-
 
 .product_description {
   padding-left: 4px;
