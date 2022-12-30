@@ -1,4 +1,4 @@
-import { JSONresponse } from '../types';
+import { JSONresponse, productDatum } from '../types';
 import { createList, createProducts } from './createPageElements';
 export default function getData() {
   fetch('https://dummyjson.com/products?limit=100')
@@ -7,13 +7,6 @@ export default function getData() {
     })
     .then((data: JSONresponse) => {
       const products = data.products;
-
-      // const newProd: productDatum[] = [];
-      // products.forEach((prod) => {
-      //   if (prod.category === 'smartphones') {
-      //     newProd.push(prod);
-      //   }
-      // });
 
       const categorQuantity: string[] = [];
       const brandQuantity: string[] = [];
@@ -30,7 +23,7 @@ export default function getData() {
         }
       });
 
-      // ----------------------------- Функция создает строку "КАТЕГОРИЯ (КОЛИЧЕСТВО\КОЛИЧЕСТВО)" ------------------------
+      // ----------------------------- Функция создает строку "(КОЛИЧЕСТВО\КОЛИЧЕСТВО)" для категорий ------------------------
       const countCategory = (categ: string) => {
         let k = 0;
         for (let i = 0; i < products.length; i++) {
@@ -38,10 +31,10 @@ export default function getData() {
             k = k + 1;
           }
         }
-        return `${categ} (${k}/${k})`;
+        return `(${k}/${k})`;
       };
 
-      // ----------------------------- Функция создает строку "БРЕНД (КОЛИЧЕСТВО\КОЛИЧЕСТВО)" ------------------------
+      // ----------------------------- Функция создает строку "(КОЛИЧЕСТВО\КОЛИЧЕСТВО)" для брендов ------------------------
       const countBrand = (brand: string) => {
         let k = 0;
         for (let i = 0; i < products.length; i++) {
@@ -49,7 +42,7 @@ export default function getData() {
             k = k + 1;
           }
         }
-        return `${brand} (${k}/${k})`;
+        return `(${k}/${k})`;
       };
 
       categories.forEach((categ) => {
@@ -59,8 +52,54 @@ export default function getData() {
         brandQuantity.push(countBrand(bran));
       });
 
-      createList(categorQuantity, document.querySelector('.categories') as HTMLTemplateElement);
-      createList(brandQuantity, document.querySelector('.brands') as HTMLTemplateElement);
+      createList(categories, categorQuantity, document.querySelector('.categories') as HTMLTemplateElement);
+      createList(brands, brandQuantity, document.querySelector('.brands') as HTMLTemplateElement);
       createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement);
+
+      let newProd: productDatum[] = [];
+
+      const inputs = document.querySelectorAll('input');
+
+      const filterCategory = document.querySelector('.filter__by-catgory');
+      filterCategory?.addEventListener('click', () => {
+        let checkedYesOrNot = false;
+        newProd = [];
+        inputs.forEach((el) => {
+          if (el.checked) {
+            checkedYesOrNot = true;
+            products.forEach((prod) => {
+              if (prod.category === el.id) {
+                newProd.push(prod);
+              }
+              createProducts(newProd, document.querySelector('.products__field') as HTMLTemplateElement);
+            });
+            return;
+          }
+        });
+        if (checkedYesOrNot === false) {
+          createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement);
+        }
+      });
+
+      const filterBrand = document.querySelector('.filter__by-brand');
+      filterBrand?.addEventListener('click', () => {
+        let checkedYesOrNot = false;
+        newProd = [];
+        inputs.forEach((el) => {
+          if (el.checked) {
+            checkedYesOrNot = true;
+            products.forEach((prod) => {
+              if (prod.brand === el.id) {
+                newProd.push(prod);
+              }
+              createProducts(newProd, document.querySelector('.products__field') as HTMLTemplateElement);
+            });
+            return;
+          }
+        });
+        if (checkedYesOrNot === false) {
+          createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement);
+        }
+      });
     });
 }
