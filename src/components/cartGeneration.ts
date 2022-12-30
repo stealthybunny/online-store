@@ -21,6 +21,11 @@ function checkPromoCodes(totalCostLine: HTMLElement) {
   const results = getStorage();
   let percent = 1;
   const promoCodes: string[] = JSON.parse(window.localStorage.getItem('online_sotre__promoCodes') as string);
+
+  if (promoCodes.length) {
+    const promocodesTable = document.createElement('div');
+    promocodesTable.className = 'promocodes__table';
+  }
   console.log(promoCodes);
   if (promoCodes.includes('RS')) {
     percent -= 0.1;
@@ -32,19 +37,24 @@ function checkPromoCodes(totalCostLine: HTMLElement) {
   console.log(percent);
 
   if (percent !== 1) {
-    console.log('promo est');
-    totalCostLine.classList.add('crossed');
+    if (!totalCostLine.classList.contains('crossed')) {
+      console.log('net');
+      totalCostLine.classList.add('crossed');
+      const newTotalCostLine = document.createElement('p');
+      newTotalCostLine.className = 'new_summary__total_line';
+      newTotalCostLine.innerText = 'Total: ';
 
-    const newTotalCostLine = document.createElement('p');
-    newTotalCostLine.className = 'summary__total_line';
-    newTotalCostLine.innerText = 'Total: ';
+      const newTotalCost = document.createElement('span');
+      newTotalCost.className = 'new_summary__total_cost';
+      newTotalCost.innerText = `${newCost.toFixed(2)} \u20ac`;
 
-    const newTotalCost = document.createElement('span');
-    newTotalCost.className = 'summary__total_cost';
-    newTotalCost.innerText = `${newCost} \u20ac`;
-
-    newTotalCostLine.append(newTotalCost);
-    totalCostLine.after(newTotalCostLine);
+      newTotalCostLine.append(newTotalCost);
+      totalCostLine.after(newTotalCostLine);
+    } else {
+      console.log('est');
+      const newTotalCost = document.querySelector('.new_summary__total_cost') as HTMLElement;
+      newTotalCost.innerText = `${newCost.toFixed(2)} \u20ac`;
+    }
   }
 }
 

@@ -79,27 +79,32 @@ export default class CartPage extends Page {
     promoInputField.className = 'promocode__input';
     promoInputField.type = 'search';
     promoInputField.placeholder = 'Enter promo code (RS or EPM)';
-    promoInputField.addEventListener('blur', () => {
+    promoInputField.addEventListener('change', () => {
       console.log(promoInputField.value);
-      // if (promoInputField.value === 'RS' || promoInputField.value === 'EPM') {
-      //   const temp: string[] = JSON.parse(window.localStorage.getItem('online_sotre__promoCodes') as string);
-
-      //   // window.localStorage.setItem('online_sotre__promoCodes')
-      // }
+      if (promoInputField.value === 'RS' || promoInputField.value === 'EPM') {
+        const temp: string[] = JSON.parse(window.localStorage.getItem('online_sotre__promoCodes') as string);
+        if (!temp.includes(promoInputField.value)) {
+          temp.push(promoInputField.value);
+          console.log('temp', temp);
+          window.localStorage.setItem('online_sotre__promoCodes', JSON.stringify(temp));
+        }
+      }
       checkPromoCodes(totalCostLine);
+      promoInputField.value = '';
     });
 
     summary.append(promoInputField);
+    this.createPopapBtn(summary);
   }
 
-  private createPopapBtn() {
+  private createPopapBtn(element: HTMLElement) {
     const btnWrap = document.createElement('div');
     const btn = document.createElement('button');
     btnWrap.className = 'btn__wrap';
     btn.innerHTML = 'Buy';
     btn.className = 'bay__btn';
     btnWrap.appendChild(btn);
-    this.container.appendChild(btnWrap);
+    element.appendChild(btnWrap);
     createPopap(this.container, btn);
     if (localStorage.getItem('clickButton') === 'true') {
       btn.click();

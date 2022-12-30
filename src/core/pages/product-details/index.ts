@@ -2,6 +2,7 @@ import { JSONresponse, productDatum } from '../../../types';
 import Page from '../../templates/page';
 import './product-details.css';
 import { addToCartListener, checkLS } from '../../../components/addToCart';
+import { lsObject } from '../../../types';
 // import createPopap from '../../../modal';
 
 export default class ProductDetails extends Page {
@@ -117,6 +118,9 @@ export default class ProductDetails extends Page {
     productBuy.append(buyBtn);
     buyBtn.innerText = 'BUY NOW';
     buyBtn.addEventListener('click', () => {
+      const cartAmount: HTMLElement = document.querySelector('.cart__quantity') as HTMLElement;
+      const total: HTMLElement = document.querySelector('.total__amount') as HTMLElement;
+      addToCartListener(total, cartAmount, datum);
       window.location.assign('#cart-page');
       localStorage.setItem('clickButton', 'true');
     });
@@ -127,9 +131,9 @@ export default class ProductDetails extends Page {
     const cartBtn = document.createElement('button');
     cartBtn.className = 'product-details__to-cart';
     productBuy.append(cartBtn);
-    checkLS(total, cartAmount, cartBtn, datum);
+    checkLS(total, cartAmount, datum, cartBtn);
     cartBtn.addEventListener('click', () => {
-      addToCartListener(total, cartAmount, cartBtn, datum);
+      addToCartListener(total, cartAmount, datum, cartBtn);
     });
   }
 

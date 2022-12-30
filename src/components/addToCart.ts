@@ -1,6 +1,6 @@
 import { lsObject, productDatum } from '../types';
 
-function checkLS(total: HTMLElement, cartAmount: HTMLElement, addOrDropBtn: HTMLElement, el: productDatum) {
+function checkLS(total: HTMLElement, cartAmount: HTMLElement, el: productDatum, addOrDropBtn?: HTMLElement) {
   const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
   const storageKeys = storage.map((el) => el.id);
   let cartTotal = 0;
@@ -14,15 +14,17 @@ function checkLS(total: HTMLElement, cartAmount: HTMLElement, addOrDropBtn: HTML
   window.localStorage.setItem('online_store__total', `${cartTotal}.00 \u20ac`);
   // window.localStorage.removeItem('online_store__total_discount');
   // window.localStorage.setItem('online_store__total_discount', `${withDiscount}`)
-  if (storageKeys.includes(el.id)) {
-    addOrDropBtn.innerText = 'Drop from Cart';
-  } else {
-    addOrDropBtn.innerText = 'Add to Cart';
+  if (addOrDropBtn) {
+    if (storageKeys.includes(el.id)) {
+      addOrDropBtn.innerText = 'Drop from Cart';
+    } else {
+      addOrDropBtn.innerText = 'Add to Cart';
+    }
+    cartAmount.innerText = `${storage.length}`;
   }
-  cartAmount.innerText = `${storage.length}`;
 }
 
-function addToCartListener(total: HTMLElement, cartAmount: HTMLElement, addOrDropBtn: HTMLElement, el: productDatum) {
+function addToCartListener(total: HTMLElement, cartAmount: HTMLElement, el: productDatum, addOrDropBtn?: HTMLElement) {
   const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
   const storageKeys = storage.map((el) => el.id);
   if (storageKeys.includes(el.id)) {
@@ -33,7 +35,7 @@ function addToCartListener(total: HTMLElement, cartAmount: HTMLElement, addOrDro
       }
     });
     window.localStorage.setItem('online_store__storage', JSON.stringify(storage));
-    checkLS(total, cartAmount, addOrDropBtn, el);
+    checkLS(total, cartAmount, el, addOrDropBtn);
     cartAmount.innerText = `${storage.length}`;
   } else {
     window.localStorage.removeItem('online_store__storage');
@@ -46,7 +48,7 @@ function addToCartListener(total: HTMLElement, cartAmount: HTMLElement, addOrDro
     };
     storage.push(temp);
     window.localStorage.setItem('online_store__storage', JSON.stringify(storage));
-    checkLS(total, cartAmount, addOrDropBtn, el);
+    checkLS(total, cartAmount, el, addOrDropBtn);
     cartAmount.innerText = `${storage.length}`;
   }
 }

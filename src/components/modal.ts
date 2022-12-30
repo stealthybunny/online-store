@@ -476,6 +476,7 @@ export default function createPopap(thisMain: HTMLElement, btnBtn: HTMLElement) 
         modal.innerHTML = `Thanks for the order! Go to the main page via (${i})`;
       }, 1000);
       setTimeout(() => {
+        window.localStorage.clear();
         window.location.assign('#');
       }, 4000);
     }

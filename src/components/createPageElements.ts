@@ -74,10 +74,10 @@ export function createProducts(productData: productDatum[], place: HTMLTemplateE
       addOrDropBtn.className = 'addBtn';
       element?.append(addOrDropBtn);
 
-      checkLS(total, cartAmount, addOrDropBtn, el);
+      checkLS(total, cartAmount, el, addOrDropBtn);
 
       addOrDropBtn.addEventListener('click', () => {
-        addToCartListener(total, cartAmount, addOrDropBtn, el);
+        addToCartListener(total, cartAmount, el, addOrDropBtn);
       });
     }
 
