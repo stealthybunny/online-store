@@ -15,12 +15,13 @@ export default class CartPage extends Page {
   }
 
   private pageGeneration() {
+    window.localStorage.setItem('promoDesc', 'false');
     if (!window.localStorage.getItem('online_sotre__promoCodes')) {
       const empty: string[] = [];
       window.localStorage.setItem('online_sotre__promoCodes', JSON.stringify(empty));
     }
 
-    // const storage = window.localStorage.getItem('online_store__storage');
+    // const promoCodes: string[] = JSON.parse(window.localStorage.getItem('online_sotre__promoCodes') as string);
     const cartWrapper = document.createElement('div');
     cartWrapper.className = 'cart__wrapper';
 
@@ -58,13 +59,7 @@ export default class CartPage extends Page {
     summary.append(totalCostLine);
 
     storageCheck(productsAmount, totalCost);
-    checkPromoCodes(totalCostLine);
-
-    // function addElement() {
-    //   const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
-    //   if (storage.length) {
-    //   }
-    // }
+    checkPromoCodes(summary, totalCostLine);
 
     if (JSON.parse(window.localStorage.getItem('online_sotre__promoCodes') as string)?.length !== 0) {
       const promoTable = document.createElement('div');
@@ -78,22 +73,54 @@ export default class CartPage extends Page {
     const promoInputField = document.createElement('input');
     promoInputField.className = 'promocode__input';
     promoInputField.type = 'search';
-    promoInputField.placeholder = 'Enter promo code (RS or EPM)';
+    promoInputField.placeholder = 'Enter promo code';
     promoInputField.addEventListener('change', () => {
-      console.log(promoInputField.value);
-      if (promoInputField.value === 'RS' || promoInputField.value === 'EPM') {
+      const valueFromInput: string = promoInputField.value.toUpperCase();
+      const promoDescription = document.createElement('p');
+      promoDescription.className = 'promocode__desc';
+      if (valueFromInput === 'EPM') {
+        promoDescription.innerText = `EPAM systems - 10%`;
+      } else {
+        promoDescription.innerText = `Rolling Scope School - 10%`;
+      }
+      const addPromo = document.createElement('span');
+      addPromo.className = 'add_promo__button';
+      addPromo.innerText = 'Add';
+      promoInputField.disabled = true;
+      addPromo.addEventListener('click', () => {
+        checkPromoCodes(summary, totalCostLine, promoDescription);
+        window.localStorage.setItem('promoDesc', 'false');
+        promoInputField.disabled = false;
+      });
+      promoDescription.append(addPromo);
+
+      if (valueFromInput === 'RS' || valueFromInput === 'EPM') {
         const temp: string[] = JSON.parse(window.localStorage.getItem('online_sotre__promoCodes') as string);
-        if (!temp.includes(promoInputField.value)) {
-          temp.push(promoInputField.value);
+        if (window.localStorage.getItem('promoDesc') === 'true') {
+          promoDescription.parentNode?.removeChild(promoDescription);
+          window.localStorage.setItem('promoDesc', 'false');
+        } else {
+          promoInputField.after(promoDescription);
+          window.localStorage.setItem('promoDesc', 'true');
+        }
+
+        if (!temp.includes(valueFromInput)) {
+          temp.push(valueFromInput);
           console.log('temp', temp);
           window.localStorage.setItem('online_sotre__promoCodes', JSON.stringify(temp));
         }
+        promoInputField.value = '';
+      } else {
+        console.log(promoDescription);
+        promoDescription.parentNode?.removeChild(promoDescription);
       }
-      checkPromoCodes(totalCostLine);
-      promoInputField.value = '';
     });
+    const promoTip = document.createElement('p');
+    promoTip.className = 'promocode__tip';
+    promoTip.innerText = `Promo for test: 'EPM', 'RS'.`;
 
     summary.append(promoInputField);
+    summary.append(promoTip);
     this.createPopapBtn(summary);
   }
 
@@ -114,7 +141,6 @@ export default class CartPage extends Page {
 
   render() {
     this.pageGeneration();
-    // this.createPopapBtn();
     return this.container;
   }
 }
