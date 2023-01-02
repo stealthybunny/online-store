@@ -102,4 +102,152 @@ function checkPromoCodes(summary: HTMLElement, totalCostLine: HTMLElement, promo
   }
 }
 
-export { storageCheck, checkPromoCodes };
+function promoLine(
+  valueFromInput: string,
+  promoInputField: HTMLInputElement,
+  summary: HTMLElement,
+  totalCostLine: HTMLElement
+) {
+  const promoDescription = document.createElement('p');
+  promoDescription.className = 'promocode__desc';
+  let descriptionText = '';
+  if (valueFromInput === 'EPM') {
+    descriptionText = `EPAM systems - 10%`;
+  } else if (valueFromInput === 'RS') {
+    descriptionText = `Rolling Scope School - 10%`;
+  } else {
+    promoInputField.value = '';
+  }
+
+  const temp: string[] = JSON.parse(window.localStorage.getItem('online_sotre__promoCodes') as string);
+  console.log('parent', promoDescription.parentNode);
+
+  if (valueFromInput === 'RS' || valueFromInput === 'EPM') {
+    promoDescription.innerText = descriptionText;
+    if (!temp.includes(valueFromInput)) {
+      promoInputField.classList.add('promo');
+
+      promoInputField.disabled = true;
+      promoInputField.placeholder = 'add or reject promo code';
+      const addPromo = document.createElement('span');
+      addPromo.className = 'add_promo__button';
+      addPromo.innerText = 'Add';
+
+      addPromo.addEventListener('click', () => {
+        promoInputField.classList.remove('promo');
+        checkPromoCodes(summary, totalCostLine, promoDescription);
+        window.localStorage.setItem('promoDesc', 'false');
+        promoInputField.disabled = false;
+        promoInputField.placeholder = 'Enter promo code';
+        if (!temp.includes(valueFromInput)) {
+          temp.push(valueFromInput);
+          console.log('temp', temp);
+          window.localStorage.setItem('online_sotre__promoCodes', JSON.stringify(temp));
+          checkPromoCodes(summary, totalCostLine, promoDescription);
+        }
+      });
+      promoDescription.append(addPromo);
+      promoInputField.after(promoDescription);
+    }
+    promoInputField.value = '';
+  }
+}
+
+function createProductHeader(productsInCart: HTMLElement, currentPage: number, productsPerPage: number) {
+  let pagesCount = 10;
+  const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
+
+  function pagesCountSet(productsPerPage: number) {
+    pagesCount = Math.ceil(storage.length / productsPerPage);
+    if (currentPage > pagesCount) {
+      currentPage = pagesCount;
+      currentPageText.innerText = `${currentPage}`;
+      createProductList(productsPerPage, currentPage, storage);
+    }
+    return pagesCount;
+  }
+  pagesCountSet(productsPerPage);
+
+  if (!storage.length) {
+    return;
+  }
+  const productsWrapper = document.createElement('div');
+  productsWrapper.className = 'products__wrapper';
+
+  const productsHeader = document.createElement('div');
+  productsHeader.className = 'products__header_cart';
+
+  const headerHeadline = document.createElement('h2');
+  headerHeadline.className = 'products__header_headline';
+  headerHeadline.innerText = 'Products In Cart';
+  productsHeader.append(headerHeadline);
+
+  const limitBlock = document.createElement('div');
+  limitBlock.className = 'products__limit_block';
+  const limitText = document.createElement('span');
+  limitText.className = 'limit__text';
+  limitText.innerText = 'LIMIT:';
+  const limitInput = document.createElement('input');
+  limitInput.type = 'number';
+  limitInput.defaultValue = `${productsPerPage}`;
+  limitInput.max = `${storage.length}`;
+  limitInput.min = '1';
+  limitInput.className = 'limit__input';
+
+  limitInput.addEventListener('change', () => {
+    productsPerPage = parseInt(limitInput.value, 10);
+    pagesCountSet(productsPerPage);
+  });
+  limitBlock.append(limitText);
+  limitBlock.append(limitInput);
+  productsHeader.append(limitBlock);
+
+  const pageBlock = document.createElement('div');
+  pageBlock.className = 'products__page_block';
+  const prevBtn = document.createElement('button');
+  prevBtn.className = 'pagination_btn';
+  prevBtn.innerText = '<';
+  prevBtn.addEventListener('click', () => {
+    pagesCount = pagesCountSet(productsPerPage);
+    if (currentPage > 1) {
+      currentPage -= 1;
+      currentPageText.innerText = `${currentPage}`;
+      createProductList(productsPerPage, currentPage, storage);
+    }
+  });
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'pagination_btn';
+  nextBtn.innerText = '>';
+  nextBtn.addEventListener('click', () => {
+    pagesCount = pagesCountSet(productsPerPage);
+    if (currentPage < pagesCount) {
+      currentPage += 1;
+      currentPageText.innerText = `${currentPage}`;
+      createProductList(productsPerPage, currentPage, storage);
+    }
+  });
+
+  const currentPageText = document.createElement('span');
+  currentPageText.innerText = `${currentPage}`;
+  currentPageText.className = 'current__page';
+  pageBlock.append(prevBtn, currentPageText, nextBtn);
+  productsHeader.append(pageBlock);
+  productsWrapper.append(productsHeader);
+  productsInCart.append(productsWrapper);
+}
+
+function createProductList(productsOnPage: number, pageNumber: number, storage: lsObject[]) {
+  const start: number = (pageNumber - 1) * productsOnPage;
+  const end: number = pageNumber * productsOnPage - 1;
+  console.log(start, end);
+  const products: lsObject[] = [];
+  storage.forEach((el, index) => {
+    if (index >= start && index <= end) {
+      console.log(index);
+      products.push(el);
+    }
+  });
+  console.log(products);
+}
+
+export { storageCheck, checkPromoCodes, promoLine, createProductHeader };

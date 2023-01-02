@@ -1,9 +1,7 @@
 import Page from '../../templates/page';
 import createPopap from '../../../components/modal';
 import './cart.css';
-// import { lsObject } from '../../../types';
-import { storageCheck } from '../../../components/cartGeneration';
-import { checkPromoCodes } from '../../../components/cartGeneration';
+import { storageCheck, promoLine, checkPromoCodes, createProductHeader } from '../../../components/cartGeneration';
 
 export default class CartPage extends Page {
   static TextObject = {
@@ -21,12 +19,13 @@ export default class CartPage extends Page {
       window.localStorage.setItem('online_sotre__promoCodes', JSON.stringify(empty));
     }
 
-    // const promoCodes: string[] = JSON.parse(window.localStorage.getItem('online_sotre__promoCodes') as string);
     const cartWrapper = document.createElement('div');
     cartWrapper.className = 'cart__wrapper';
 
     const productsInCart = document.createElement('div');
     productsInCart.className = 'cart__products';
+
+    createProductHeader(productsInCart, 1, 3);
 
     const summary = document.createElement('div');
     summary.className = 'cart__summary';
@@ -76,44 +75,7 @@ export default class CartPage extends Page {
     promoInputField.placeholder = 'Enter promo code';
     promoInputField.addEventListener('change', () => {
       const valueFromInput: string = promoInputField.value.toUpperCase();
-      const promoDescription = document.createElement('p');
-      promoDescription.className = 'promocode__desc';
-      if (valueFromInput === 'EPM') {
-        promoDescription.innerText = `EPAM systems - 10%`;
-      } else {
-        promoDescription.innerText = `Rolling Scope School - 10%`;
-      }
-      const addPromo = document.createElement('span');
-      addPromo.className = 'add_promo__button';
-      addPromo.innerText = 'Add';
-      promoInputField.disabled = true;
-      addPromo.addEventListener('click', () => {
-        checkPromoCodes(summary, totalCostLine, promoDescription);
-        window.localStorage.setItem('promoDesc', 'false');
-        promoInputField.disabled = false;
-      });
-      promoDescription.append(addPromo);
-
-      if (valueFromInput === 'RS' || valueFromInput === 'EPM') {
-        const temp: string[] = JSON.parse(window.localStorage.getItem('online_sotre__promoCodes') as string);
-        if (window.localStorage.getItem('promoDesc') === 'true') {
-          promoDescription.parentNode?.removeChild(promoDescription);
-          window.localStorage.setItem('promoDesc', 'false');
-        } else {
-          promoInputField.after(promoDescription);
-          window.localStorage.setItem('promoDesc', 'true');
-        }
-
-        if (!temp.includes(valueFromInput)) {
-          temp.push(valueFromInput);
-          console.log('temp', temp);
-          window.localStorage.setItem('online_sotre__promoCodes', JSON.stringify(temp));
-        }
-        promoInputField.value = '';
-      } else {
-        console.log(promoDescription);
-        promoDescription.parentNode?.removeChild(promoDescription);
-      }
+      promoLine(valueFromInput, promoInputField, summary, totalCostLine);
     });
     const promoTip = document.createElement('p');
     promoTip.className = 'promocode__tip';

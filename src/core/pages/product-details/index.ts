@@ -2,8 +2,6 @@ import { JSONresponse, productDatum } from '../../../types';
 import Page from '../../templates/page';
 import './product-details.css';
 import { addToCartListener, checkLS } from '../../../components/addToCart';
-import { lsObject } from '../../../types';
-// import createPopap from '../../../modal';
 
 export default class ProductDetails extends Page {
   static TextObject = {

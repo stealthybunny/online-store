@@ -5,6 +5,7 @@ app.run();
 
 import './template.css';
 import './main.css';
-// import getData from './components/getData';
 
-// getData();
+window.addEventListener('load', () => {
+  window.location.assign('#');
+});
