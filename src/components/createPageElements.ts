@@ -1,23 +1,31 @@
 import { productDatum, lsObject } from '../types';
 import { checkLS, addToCartListener } from './addToCart';
 
-export function createList(data: string[], place: HTMLTemplateElement): void {
-  data.forEach((el) => {
+export function createList(data: string[], quantity: string[], place: HTMLTemplateElement): void {
+  for (let i = 0; i < data.length; i++) {
     const checkBoxLine = document.createElement('div');
     checkBoxLine.classList.add('checkbox__line');
     const checkBox = document.createElement('input');
     const label = document.createElement('label');
-    label.textContent = el;
-    checkBox.setAttribute('id', `${el}`);
+    label.textContent = data[i];
+    checkBox.setAttribute('id', `${data[i]}`);
     checkBox.setAttribute('type', `checkbox`);
-    label.setAttribute('for', `${el}`);
+    label.setAttribute('for', `${data[i]}`);
     checkBoxLine.appendChild(checkBox);
     checkBoxLine.appendChild(label);
+
+
+    const count = document.createElement('div');
+    count.textContent = quantity[i];
+    checkBoxLine.appendChild(count);
+
+
     place.appendChild(checkBoxLine);
-  });
+  }
 }
 
 export function createProducts(productData: productDatum[], place: HTMLTemplateElement): void {
+
   const cartAmount: HTMLElement = document.querySelector('.cart__quantity') as HTMLElement;
   const total: HTMLElement = document.querySelector('.total__amount') as HTMLElement;
   if (!window.localStorage.getItem('online_store__storage')) {
@@ -33,6 +41,7 @@ export function createProducts(productData: productDatum[], place: HTMLTemplateE
     total.innerText = `${totalCost}`;
   }
 
+  place.innerHTML = '';
   productData.forEach((el) => {
     const productBox = document.createElement('div');
     productBox.classList.add('product-box');
