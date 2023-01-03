@@ -1,4 +1,4 @@
-import { JSONresponse, productDatum } from '../types';
+import { JSONresponse } from '../types';
 import { createList, createProducts } from './createPageElements';
 export default function getData() {
   fetch('https://dummyjson.com/products?limit=100')
@@ -51,50 +51,84 @@ export default function getData() {
       brands.forEach((bran) => {
         brandQuantity.push(countBrand(bran));
       });
-
+      let newProd = products;
+      let newProdTho = products;
+      let newNewProd: string[] = [];
+      let categorySearch: string[] = [];
+      let brandSearch: string[] = [];
       createList(categories, categorQuantity, document.querySelector('.categories') as HTMLTemplateElement);
       createList(brands, brandQuantity, document.querySelector('.brands') as HTMLTemplateElement);
       createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement);
 
-      let newProd: productDatum[] = [];
-
       const inputs = document.querySelectorAll('input');
 
-      const filterCategory = document.querySelector('.filter__by-catgory');
-      filterCategory?.addEventListener('click', () => {
-        let checkedYesOrNot = false;
-        newProd = [];
-        inputs.forEach((el) => {
-          if (el.checked) {
-            checkedYesOrNot = true;
-            products.forEach((prod) => {
-              if (prod.category === el.id) {
-                newProd.push(prod);
-              }
-              createProducts(newProd, document.querySelector('.products__field') as HTMLTemplateElement);
-            });
-            return;
-          }
-        });
-        if (checkedYesOrNot === false) {
-          createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement);
-        }
-      });
+      const filterSection = document.querySelector('.filter__section');
 
-      const filterBrand = document.querySelector('.filter__by-brand');
-      filterBrand?.addEventListener('click', () => {
+      filterSection?.addEventListener('click', () => {
         let checkedYesOrNot = false;
+        const url = new URL(window.location.href);
+        // console.log(url.origin);
+        const myParams = new URLSearchParams(window.location.search);
         newProd = [];
+        newNewProd = [];
+        newProdTho = [];
+        categorySearch = [];
+        brandSearch = [];
         inputs.forEach((el) => {
           if (el.checked) {
             checkedYesOrNot = true;
-            products.forEach((prod) => {
-              if (prod.brand === el.id) {
-                newProd.push(prod);
+            if (el.closest('.filter__by-catgory')) {
+              categorySearch.push(el.id);
+              myParams.set('category', categorySearch.join('↕'));
+
+              if (!newNewProd.includes('category')) {
+                newNewProd.push('category');
               }
-              createProducts(newProd, document.querySelector('.products__field') as HTMLTemplateElement);
-            });
-            return;
+              products.forEach((prod) => {
+                if (prod.category === el.id) {
+                  if (newNewProd.length === 1) {
+                    newProd.push(prod);
+                    createProducts(newProd, document.querySelector('.products__field') as HTMLTemplateElement);
+                  } else {
+                    newProd.forEach((prod) => {
+                      if (prod.category === el.id) {
+                        if (!newProdTho.includes(prod)) {
+                          newProdTho.push(prod);
+                        }
+                      }
+                      createProducts(newProdTho, document.querySelector('.products__field') as HTMLTemplateElement);
+                    });
+                  }
+                }
+              });
+            }
+            if (el.closest('.filter__by-brand')) {
+              brandSearch.push(el.id);
+              myParams.set('brand', brandSearch.join('↕'));
+              if (!newNewProd.includes('brand')) {
+                newNewProd.push('brand');
+                // console.log(newNewProd);
+              }
+              products.forEach((prod) => {
+                if (prod.brand === el.id) {
+                  if (newNewProd.length === 1) {
+                    newProd.push(prod);
+                    createProducts(newProd, document.querySelector('.products__field') as HTMLTemplateElement);
+                  } else {
+                    newProd.forEach((prod) => {
+                      if (prod.brand === el.id) {
+                        if (!newProdTho.includes(prod)) {
+                          newProdTho.push(prod);
+                        }
+                      }
+                      createProducts(newProdTho, document.querySelector('.products__field') as HTMLTemplateElement);
+                    });
+                  }
+                }
+              });
+            }
+            const fullUrl = url.origin + '?' + myParams.toString();
+            history.pushState(window.location.href, '?', fullUrl);
           }
         });
         if (checkedYesOrNot === false) {
