@@ -53,8 +53,6 @@ export default class MainPage extends Page {
     this.createPageTitle(MainPage.TextObject.MainTitle);
     this.createPageContent();
     getData();
-    // const title = this.createHeaderTitle(MainPage.TextObject.MainTitle);
-    // this.container.append(title);
     return this.container;
   }
 }

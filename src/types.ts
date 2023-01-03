@@ -18,3 +18,11 @@ export interface JSONresponse {
   skip: number;
   limit: number;
 }
+
+export type lsObject = {
+  id: number;
+  amount: number;
+  price: number;
+  discount: number;
+  itemData: productDatum;
+};
