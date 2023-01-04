@@ -51,8 +51,9 @@ export default function getData() {
       brands.forEach((bran) => {
         brandQuantity.push(countBrand(bran));
       });
-      let newProd = products;
-      let newProdTho = products;
+      let newProdCategory = [...products];
+      let newProdBrand = [...products];
+      let finishArr = [...products];
       let newNewProd: string[] = [];
       let categorySearch: string[] = [];
       let brandSearch: string[] = [];
@@ -61,79 +62,85 @@ export default function getData() {
       createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement);
 
       const inputs = document.querySelectorAll('input');
-
       const filterSection = document.querySelector('.filter__section');
 
       filterSection?.addEventListener('click', () => {
         let checkedYesOrNot = false;
-        const url = new URL(window.location.href);
-        // console.log(url.origin);
+        // const url = new URL(window.location.href);
         const myParams = new URLSearchParams(window.location.search);
-        newProd = [];
-        newNewProd = [];
-        newProdTho = [];
+        newProdCategory = [...products];
+        newProdBrand = [...products];
+
         categorySearch = [];
+        finishArr = [];
         brandSearch = [];
         inputs.forEach((el) => {
           if (el.checked) {
             checkedYesOrNot = true;
+
             if (el.closest('.filter__by-catgory')) {
               categorySearch.push(el.id);
+
               myParams.set('category', categorySearch.join('↕'));
 
               if (!newNewProd.includes('category')) {
                 newNewProd.push('category');
               }
-              products.forEach((prod) => {
-                if (prod.category === el.id) {
-                  if (newNewProd.length === 1) {
-                    newProd.push(prod);
-                    createProducts(newProd, document.querySelector('.products__field') as HTMLTemplateElement);
-                  } else {
-                    newProd.forEach((prod) => {
-                      if (prod.category === el.id) {
-                        if (!newProdTho.includes(prod)) {
-                          newProdTho.push(prod);
-                        }
-                      }
-                      createProducts(newProdTho, document.querySelector('.products__field') as HTMLTemplateElement);
-                    });
+
+              if (newProdCategory.length === 100) {
+                newProdCategory = newProdCategory.filter((prod) => {
+                  if (prod.category === el.id) {
+                    return prod;
                   }
-                }
-              });
+                });
+              } else {
+                products.forEach((prod) => {
+                  if (prod.category === el.id && !newProdCategory.includes(prod)) {
+                    newProdCategory.push(prod);
+                  }
+                });
+              }
             }
+
             if (el.closest('.filter__by-brand')) {
               brandSearch.push(el.id);
+
               myParams.set('brand', brandSearch.join('↕'));
+
               if (!newNewProd.includes('brand')) {
                 newNewProd.push('brand');
-                // console.log(newNewProd);
               }
-              products.forEach((prod) => {
-                if (prod.brand === el.id) {
-                  if (newNewProd.length === 1) {
-                    newProd.push(prod);
-                    createProducts(newProd, document.querySelector('.products__field') as HTMLTemplateElement);
-                  } else {
-                    newProd.forEach((prod) => {
-                      if (prod.brand === el.id) {
-                        if (!newProdTho.includes(prod)) {
-                          newProdTho.push(prod);
-                        }
-                      }
-                      createProducts(newProdTho, document.querySelector('.products__field') as HTMLTemplateElement);
-                    });
+
+              if (newProdBrand.length === 100) {
+                newProdBrand = newProdBrand.filter((prod) => {
+                  if (prod.brand === el.id) {
+                    return prod;
                   }
-                }
-              });
+                });
+              } else {
+                products.forEach((prod) => {
+                  if (prod.brand === el.id && !newProdBrand.includes(prod)) {
+                    newProdBrand.push(prod);
+                  }
+                });
+              }
             }
-            const fullUrl = url.origin + '?' + myParams.toString();
-            history.pushState(window.location.href, '?', fullUrl);
           }
         });
+        newProdCategory.forEach((prodC) => {
+          newProdBrand.forEach((prodB) => {
+            if (prodC === prodB) {
+              finishArr.push(prodC);
+            }
+          });
+        });
+        createProducts(finishArr, document.querySelector('.products__field') as HTMLTemplateElement);
+        const fullUrl = '#?' + myParams.toString();
+        history.pushState(window.location.href, '#', fullUrl);
         if (checkedYesOrNot === false) {
           createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement);
         }
+        newNewProd = [];
       });
     });
 }

@@ -49,9 +49,18 @@ export default class MainPage extends Page {
     `;
   }
 
+  private createHeaderProducts() {
+    const headerMain = this.container.querySelector('.products__header');
+    const searchInput = document.createElement('input');
+    searchInput.type = 'search';
+    searchInput.className = 'search';
+    headerMain?.append(searchInput);
+  }
+
   render() {
     this.createPageTitle(MainPage.TextObject.MainTitle);
     this.createPageContent();
+    // this.createHeaderProducts();
     getData();
     return this.container;
   }

@@ -6,6 +6,7 @@ export function createList(data: string[], quantity: string[], place: HTMLTempla
     const checkBoxLine = document.createElement('div');
     checkBoxLine.classList.add('checkbox__line');
     const checkBox = document.createElement('input');
+    checkBox.className = 'input__filter';
     const label = document.createElement('label');
     label.textContent = data[i];
     checkBox.setAttribute('id', `${data[i]}`);
@@ -14,18 +15,15 @@ export function createList(data: string[], quantity: string[], place: HTMLTempla
     checkBoxLine.appendChild(checkBox);
     checkBoxLine.appendChild(label);
 
-
     const count = document.createElement('div');
     count.textContent = quantity[i];
     checkBoxLine.appendChild(count);
-
 
     place.appendChild(checkBoxLine);
   }
 }
 
 export function createProducts(productData: productDatum[], place: HTMLTemplateElement): void {
-
   const cartAmount: HTMLElement = document.querySelector('.cart__quantity') as HTMLElement;
   const total: HTMLElement = document.querySelector('.total__amount') as HTMLElement;
   if (!window.localStorage.getItem('online_store__storage')) {
