@@ -1,7 +1,7 @@
 import { JSONresponse, productDatum } from '../../../types';
 import Page from '../../templates/page';
 import './product-details.css';
-// import createPopap from '../../../modal';
+import { addToCartListener, checkLS } from '../../../components/addToCart';
 
 export default class ProductDetails extends Page {
   static TextObject = {
@@ -116,14 +116,23 @@ export default class ProductDetails extends Page {
     productBuy.append(buyBtn);
     buyBtn.innerText = 'BUY NOW';
     buyBtn.addEventListener('click', () => {
+      const cartAmount: HTMLElement = document.querySelector('.cart__quantity') as HTMLElement;
+      const total: HTMLElement = document.querySelector('.total__amount') as HTMLElement;
+      addToCartListener(total, cartAmount, datum);
       window.location.assign('#cart-page');
       localStorage.setItem('clickButton', 'true');
     });
 
+    const cartAmount: HTMLElement = document.querySelector('.cart__quantity') as HTMLElement;
+    const total: HTMLElement = document.querySelector('.total__amount') as HTMLElement;
+
     const cartBtn = document.createElement('button');
     cartBtn.className = 'product-details__to-cart';
     productBuy.append(cartBtn);
-    cartBtn.innerText = 'ADD TO CART';
+    checkLS(total, cartAmount, datum, cartBtn);
+    cartBtn.addEventListener('click', () => {
+      addToCartListener(total, cartAmount, datum, cartBtn);
+    });
   }
 
   private createProducDesription(productID: number) {
