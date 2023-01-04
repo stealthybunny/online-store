@@ -65,6 +65,8 @@ export default function getData() {
       const filterSection = document.querySelector('.filter__section');
 
       filterSection?.addEventListener('click', () => {
+        // window.location.assign('#');
+        createProducts(newProdTho, document.querySelector('.products__field') as HTMLTemplateElement);
         let checkedYesOrNot = false;
         const url = new URL(window.location.href);
         // console.log(url.origin);
@@ -127,7 +129,8 @@ export default function getData() {
                 }
               });
             }
-            const fullUrl = url.origin + '?' + myParams.toString();
+            // const fullUrl = url.origin + '?' + myParams.toString();
+            const fullUrl = '#?' + myParams.toString();
             history.pushState(window.location.href, '?', fullUrl);
           }
         });

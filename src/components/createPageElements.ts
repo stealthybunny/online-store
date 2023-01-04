@@ -14,18 +14,15 @@ export function createList(data: string[], quantity: string[], place: HTMLTempla
     checkBoxLine.appendChild(checkBox);
     checkBoxLine.appendChild(label);
 
-
     const count = document.createElement('div');
     count.textContent = quantity[i];
     checkBoxLine.appendChild(count);
-
 
     place.appendChild(checkBoxLine);
   }
 }
 
 export function createProducts(productData: productDatum[], place: HTMLTemplateElement): void {
-
   const cartAmount: HTMLElement = document.querySelector('.cart__quantity') as HTMLElement;
   const total: HTMLElement = document.querySelector('.total__amount') as HTMLElement;
   if (!window.localStorage.getItem('online_store__storage')) {
