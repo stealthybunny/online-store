@@ -1,5 +1,7 @@
 import { JSONresponse } from '../types';
 import { createList, createProducts } from './createPageElements';
+import { searchInput } from '../core/pages/main/index';
+
 export default function getData() {
   fetch('https://dummyjson.com/products?limit=100')
     .then((response) => {
@@ -61,7 +63,7 @@ export default function getData() {
       createList(brands, brandQuantity, document.querySelector('.brands') as HTMLTemplateElement);
       createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement);
 
-      const inputs = document.querySelectorAll('input');
+      const inputCheckbox = document.querySelectorAll('input');
       const filterSection = document.querySelector('.filter__section');
 
       // document.querySelector('.reset__button')?.addEventListener('click', () => {
@@ -69,6 +71,7 @@ export default function getData() {
       // });
 
       filterSection?.addEventListener('click', () => {
+        newNewProd = [];
         let checkedYesOrNot = false;
         // const url = new URL(window.location.href);
         const myParams = new URLSearchParams(window.location.search);
@@ -78,8 +81,8 @@ export default function getData() {
         categorySearch = [];
         finishArr = [];
         brandSearch = [];
-        inputs.forEach((el) => {
-          if (el.checked) {
+        inputCheckbox.forEach((el) => {
+          if (el.checked && el.classList.contains('input__filter')) {
             checkedYesOrNot = true;
 
             if (el.closest('.filter__by-catgory')) {
@@ -138,13 +141,44 @@ export default function getData() {
             }
           });
         });
-        createProducts(finishArr, document.querySelector('.products__field') as HTMLTemplateElement);
+        const searchArr = finishArr.filter((item) => {
+          if (
+            item.brand.includes(searchInput.value) ||
+            item.category.includes(searchInput.value) ||
+            item.discountPercentage.toString().toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            item.price.toString().includes(searchInput.value) ||
+            item.rating.toString().includes(searchInput.value) ||
+            item.title.toLowerCase().includes(searchInput.value.toLowerCase())
+          ) {
+            return item;
+          }
+        });
+        createProducts(searchArr, document.querySelector('.products__field') as HTMLTemplateElement);
+        // createProducts(finishArr, document.querySelector('.products__field') as HTMLTemplateElement);
         const fullUrl = '#?' + myParams.toString();
         history.pushState(window.location.href, '#', fullUrl);
         if (checkedYesOrNot === false) {
           createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement);
         }
-        newNewProd = [];
+      });
+      // const toCheck = (e: number | string, e1: number | string): string => {
+      //   return e.toString().toLowerCase().includes(e1.toLowerCase());
+      // };
+      console.log(searchInput as HTMLInputElement);
+      searchInput.addEventListener('input', function () {
+        const searchArr = finishArr.filter((item) => {
+          if (
+            item.brand.includes(searchInput.value) ||
+            item.category.includes(searchInput.value) ||
+            item.discountPercentage.toString().toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            item.price.toString().includes(searchInput.value) ||
+            item.rating.toString().includes(searchInput.value) ||
+            item.title.toLowerCase().includes(searchInput.value.toLowerCase())
+          ) {
+            return item;
+          }
+        });
+        createProducts(searchArr, document.querySelector('.products__field') as HTMLTemplateElement);
       });
     });
 }
