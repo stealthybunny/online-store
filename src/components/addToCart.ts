@@ -1,31 +1,37 @@
 import { lsObject, productDatum } from '../types';
 
-function checkLS(total: HTMLElement, cartAmount: HTMLElement, el: productDatum, addOrDropBtn?: HTMLElement) {
+function checkLS(total: HTMLElement, cartAmount: HTMLElement, el?: productDatum, addOrDropBtn?: HTMLElement) {
   const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
-  const storageKeys = storage.map((el) => el.id);
-  let cartTotal = 0;
-  let amount = 0;
-  // let withDiscount = 0;
-  storage.forEach((el) => {
-    cartTotal += el.price * el.amount;
-    amount += el.amount;
-    // withDiscount = withDiscount + (el.price *(100 - el.discount)) / 100;
-  });
-  total.innerText = `${cartTotal}.00 \u20ac`;
-  cartAmount.innerText = `${amount}`;
-  window.localStorage.removeItem('online_store__total');
-  window.localStorage.setItem('online_store__total', `${cartTotal}.00 \u20ac`);
-  window.localStorage.removeItem('online_store__amount');
-  window.localStorage.setItem('online_store__amount', `${amount}`);
-  // window.localStorage.removeItem('online_store__total_discount');
-  // window.localStorage.setItem('online_store__total_discount', `${withDiscount}`)
-  if (addOrDropBtn) {
-    if (storageKeys.includes(el.id)) {
-      addOrDropBtn.innerText = 'Drop from Cart';
-    } else {
-      addOrDropBtn.innerText = 'Add to Cart';
-    }
+  if (!storage.length && !el) {
+    total.innerText = `0.00 \u20ac`;
+    cartAmount.innerText = `0`;
+    window.localStorage.removeItem('online_store__total');
+    window.localStorage.setItem('online_store__total', `0.00 \u20ac`);
+    window.localStorage.removeItem('online_store__amount');
+    window.localStorage.setItem('online_store__amount', `0`);
+  } else {
+    const data = el as productDatum;
+    const storageKeys = storage.map((el) => el.id);
+    let cartTotal = 0;
+    let amount = 0;
+    storage.forEach((el) => {
+      cartTotal += el.price * el.amount;
+      amount += el.amount;
+    });
+    total.innerText = `${cartTotal}.00 \u20ac`;
     cartAmount.innerText = `${amount}`;
+    window.localStorage.removeItem('online_store__total');
+    window.localStorage.setItem('online_store__total', `${cartTotal}.00 \u20ac`);
+    window.localStorage.removeItem('online_store__amount');
+    window.localStorage.setItem('online_store__amount', `${amount}`);
+    if (addOrDropBtn) {
+      if (storageKeys.includes(data.id)) {
+        addOrDropBtn.innerText = 'Drop from Cart';
+      } else {
+        addOrDropBtn.innerText = 'Add to Cart';
+      }
+      cartAmount.innerText = `${amount}`;
+    }
   }
 }
 

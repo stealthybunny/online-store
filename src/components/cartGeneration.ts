@@ -1,5 +1,6 @@
 import { lsObject } from '../types';
 import { checkLS } from './addToCart';
+import { totalAndAmount } from './summaryCreation';
 
 function getStorage() {
   console.log('getStorage');
@@ -28,7 +29,7 @@ function checkPromoCodes(summary: HTMLElement, totalCostLine: HTMLElement, promo
   }
   const existingTable = document.querySelector('.promocodes__table');
   existingTable?.parentNode?.removeChild(existingTable);
-  const results = getStorage();
+  const results = parseFloat((window.localStorage.getItem('online_store__total') as string).split(' ')[0]);
   let percent = 1;
   const promoCodes: string[] = JSON.parse(window.localStorage.getItem('online_sotre__promoCodes') as string);
 
@@ -38,7 +39,7 @@ function checkPromoCodes(summary: HTMLElement, totalCostLine: HTMLElement, promo
   if (promoCodes.includes('EPM')) {
     percent -= 0.1;
   }
-  const newCost = percent * results[1];
+  const newCost = percent * results;
 
   if (percent !== 1) {
     if (!totalCostLine.classList.contains('crossed')) {
@@ -156,7 +157,7 @@ function createProductHeader(
   productsInCart: HTMLElement,
   currentPage: number,
   productsPerPage: number,
-  productsAmount: HTMLElement,
+  summaryAmount: HTMLElement,
   totalCost: HTMLElement
 ) {
   let pagesCount = 10;
@@ -198,8 +199,9 @@ function createProductHeader(
     if (currentPage > pagesCount) {
       currentPage = pagesCount;
       currentPageText.innerText = `${currentPage}`;
-      createProductList(productsPerPage, currentPage, storage, productField, productsAmount, totalCost);
+      createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
     }
+    console.log(pagesCount, 'pages');
     return pagesCount;
   }
 
@@ -235,7 +237,7 @@ function createProductHeader(
     if (currentPage > 1) {
       currentPage -= 1;
       currentPageText.innerText = `${currentPage}`;
-      createProductList(productsPerPage, currentPage, storage, productField, productsAmount, totalCost);
+      createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
     }
   });
 
@@ -244,11 +246,11 @@ function createProductHeader(
     if (currentPage < pagesCount) {
       currentPage += 1;
       currentPageText.innerText = `${currentPage}`;
-      createProductList(productsPerPage, currentPage, storage, productField, productsAmount, totalCost);
+      createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
     }
   });
 
-  createProductList(productsPerPage, currentPage, storage, productField, productsAmount, totalCost);
+  createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
 }
 
 function createProductList(
@@ -256,8 +258,8 @@ function createProductList(
   pageNumber: number,
   storage: lsObject[],
   field: HTMLElement,
-  productAmount: HTMLElement,
-  totalCost: HTMLElement
+  totalCost: HTMLElement,
+  summaryAmount: HTMLElement
 ) {
   if (field.hasChildNodes()) {
     while (field.firstChild) {
@@ -266,11 +268,8 @@ function createProductList(
   }
   const start: number = (pageNumber - 1) * productsOnPage;
   const end: number = pageNumber * productsOnPage - 1;
-  const products: lsObject[] = [];
   storage.forEach((el, index) => {
     if (index >= start && index <= end) {
-      products.push(el);
-
       const cartProductWrapper = document.createElement('div');
       cartProductWrapper.className = 'cart_product__wrapper';
 
@@ -324,14 +323,32 @@ function createProductList(
       increaseAmount.className = 'increase_amount__button';
       increaseAmount.innerText = '+';
       increaseAmount.addEventListener('click', () => {
-        changeProductsAmount(storage.indexOf(el), '+', productsOnPage, pageNumber, field, productAmount, totalCost);
+        changeProductsAmount(
+          storage.indexOf(el),
+          '+',
+          productsOnPage,
+          pageNumber,
+          field,
+          productAmount,
+          totalCost,
+          summaryAmount
+        );
       });
 
       const decreaseAmount = document.createElement('button');
       decreaseAmount.className = 'decrease_amount__button';
       decreaseAmount.innerText = `-`;
       decreaseAmount.addEventListener('click', () => {
-        changeProductsAmount(storage.indexOf(el), '-', productsOnPage, pageNumber, field, productAmount, totalCost);
+        changeProductsAmount(
+          storage.indexOf(el),
+          '-',
+          productsOnPage,
+          pageNumber,
+          field,
+          productAmount,
+          totalCost,
+          summaryAmount
+        );
       });
 
       const productAmount = document.createElement('span');
@@ -359,32 +376,42 @@ function changeProductsAmount(
   productsOnPage: number,
   pageNumber: number,
   field: HTMLElement,
-  productsAmount: HTMLElement,
-  totalCost: HTMLElement
+  productAmount: HTMLElement,
+  totalCost: HTMLElement,
+  summaryAmount: HTMLElement
 ) {
-  console.log(productsAmount);
   const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
   const cartAmount: HTMLElement = document.querySelector('.cart__quantity') as HTMLElement;
   const total: HTMLElement = document.querySelector('.total__amount') as HTMLElement;
   if (operation === '-') {
     storage[position].amount -= 1;
-    if (storage[position].amount === 0) {
+    if (storage[position].amount < 1) {
       storage.splice(position, 1);
+      window.localStorage.setItem('online_store__storage', JSON.stringify(storage));
+      storageCheck(summaryAmount, totalCost);
+      checkLS(total, cartAmount);
+      totalAndAmount(summaryAmount, totalCost);
+
+      if (field.hasChildNodes()) {
+        createProductList(productsOnPage, pageNumber, storage, field, totalCost, summaryAmount);
+      } else {
+        createProductList(productsOnPage, pageNumber - 1, storage, field, totalCost, summaryAmount);
+      }
     }
     window.localStorage.setItem('online_store__storage', JSON.stringify(storage));
-    storageCheck(productsAmount, totalCost);
     checkLS(total, cartAmount, storage[position].itemData);
+    totalAndAmount(summaryAmount, totalCost);
+    productAmount.innerText = `${storage[position].amount}`;
   } else if (operation === '+') {
     storage[position].amount += 1;
-    if (storage[position].amount === storage[position].itemData.stock) {
+    if (storage[position].amount >= storage[position].itemData.stock - 1) {
       storage[position].amount = storage[position].itemData.stock;
     }
     window.localStorage.setItem('online_store__storage', JSON.stringify(storage));
-    storageCheck(productsAmount, totalCost);
     checkLS(total, cartAmount, storage[position].itemData);
+    totalAndAmount(summaryAmount, totalCost);
+    productAmount.innerText = `${storage[position].amount}`;
   }
-  // window.localStorage.setItem('online_store__storage', JSON.stringify(storage));
-  createProductList(productsOnPage, pageNumber, storage, field, productsAmount, totalCost);
 }
 
-export { storageCheck, checkPromoCodes, promoLine, createProductHeader };
+export { checkPromoCodes, promoLine, createProductHeader };

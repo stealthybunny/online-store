@@ -14,9 +14,10 @@
 .cart__summary {
   width: 30%;
   height: 100%;
-  border: 1px solid;
+  border: 1px solid #79b257;
   display: flex;
   flex-direction: column;
+  color: white;
 }
 
 .cart__summary_headline {
@@ -66,6 +67,23 @@
 }
 
 /* --------------Promocodes&byu section----------------------- */
+.promocode__desc {
+  margin-top: 8px;
+}
+
+.add_promo__button,
+.code_drop__button {
+  padding: 0 5px 0 5px;
+  margin-left: 10px;
+  background-color: white;
+  color: black;
+  border: 1px solid #79b257;
+  cursor: pointer;
+}
+
+/* .code_drop__button {
+
+} */
 
 /* --------------Products List ------------------------------- */
 
