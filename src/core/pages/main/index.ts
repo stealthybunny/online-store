@@ -14,7 +14,7 @@ export default class MainPage extends Page {
     this.container.innerHTML = `
       <aside class="filter__section">
         <div class="filter__buttons">
-          <button class="reset__button filter__button">Reset</button>
+          <a href="#" class="reset__button filter__button">Reset</a>
           <button class="copy-link__button filter__button">Copy Link</button>
         </div>
         <div class="filter__by-catgory filter__block">
@@ -49,9 +49,18 @@ export default class MainPage extends Page {
     `;
   }
 
+  private createHeaderProducts() {
+    const headerMain = this.container.querySelector('.products__header');
+    const searchInput = document.createElement('input');
+    searchInput.type = 'search';
+    searchInput.className = 'search';
+    headerMain?.append(searchInput);
+  }
+
   render() {
     this.createPageTitle(MainPage.TextObject.MainTitle);
     this.createPageContent();
+    // this.createHeaderProducts();
     getData();
     return this.container;
   }

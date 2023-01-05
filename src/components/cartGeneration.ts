@@ -157,16 +157,7 @@ function createProductHeader(productsInCart: HTMLElement, currentPage: number, p
   let pagesCount = 10;
   const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
 
-  function pagesCountSet(productsPerPage: number) {
-    pagesCount = Math.ceil(storage.length / productsPerPage);
-    if (currentPage > pagesCount) {
-      currentPage = pagesCount;
-      currentPageText.innerText = `${currentPage}`;
-      createProductList(productsPerPage, currentPage, storage);
-    }
-    return pagesCount;
-  }
-  pagesCountSet(productsPerPage);
+  // pagesCountSet(productsPerPage);
 
   if (!storage.length) {
     return;
@@ -182,6 +173,9 @@ function createProductHeader(productsInCart: HTMLElement, currentPage: number, p
   headerHeadline.innerText = 'Products In Cart';
   productsHeader.append(headerHeadline);
 
+  const productField = document.createElement('div');
+  productField.className = 'product_list__field';
+
   const limitBlock = document.createElement('div');
   limitBlock.className = 'products__limit_block';
   const limitText = document.createElement('span');
@@ -193,6 +187,16 @@ function createProductHeader(productsInCart: HTMLElement, currentPage: number, p
   limitInput.max = `${storage.length}`;
   limitInput.min = '1';
   limitInput.className = 'limit__input';
+
+  function pagesCountSet(productsPerPage: number) {
+    pagesCount = Math.ceil(storage.length / productsPerPage);
+    if (currentPage > pagesCount) {
+      currentPage = pagesCount;
+      currentPageText.innerText = `${currentPage}`;
+      createProductList(productsPerPage, currentPage, storage, productField);
+    }
+    return pagesCount;
+  }
 
   limitInput.addEventListener('change', () => {
     productsPerPage = parseInt(limitInput.value, 10);
@@ -207,25 +211,10 @@ function createProductHeader(productsInCart: HTMLElement, currentPage: number, p
   const prevBtn = document.createElement('button');
   prevBtn.className = 'pagination_btn';
   prevBtn.innerText = '<';
-  prevBtn.addEventListener('click', () => {
-    pagesCount = pagesCountSet(productsPerPage);
-    if (currentPage > 1) {
-      currentPage -= 1;
-      currentPageText.innerText = `${currentPage}`;
-      createProductList(productsPerPage, currentPage, storage);
-    }
-  });
+
   const nextBtn = document.createElement('button');
   nextBtn.className = 'pagination_btn';
   nextBtn.innerText = '>';
-  nextBtn.addEventListener('click', () => {
-    pagesCount = pagesCountSet(productsPerPage);
-    if (currentPage < pagesCount) {
-      currentPage += 1;
-      currentPageText.innerText = `${currentPage}`;
-      createProductList(productsPerPage, currentPage, storage);
-    }
-  });
 
   const currentPageText = document.createElement('span');
   currentPageText.innerText = `${currentPage}`;
@@ -233,10 +222,36 @@ function createProductHeader(productsInCart: HTMLElement, currentPage: number, p
   pageBlock.append(prevBtn, currentPageText, nextBtn);
   productsHeader.append(pageBlock);
   productsWrapper.append(productsHeader);
+  productsWrapper.append(productField);
   productsInCart.append(productsWrapper);
+
+  prevBtn.addEventListener('click', () => {
+    pagesCount = pagesCountSet(productsPerPage);
+    if (currentPage > 1) {
+      currentPage -= 1;
+      currentPageText.innerText = `${currentPage}`;
+      createProductList(productsPerPage, currentPage, storage, productField);
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    pagesCount = pagesCountSet(productsPerPage);
+    if (currentPage < pagesCount) {
+      currentPage += 1;
+      currentPageText.innerText = `${currentPage}`;
+      createProductList(productsPerPage, currentPage, storage, productField);
+    }
+  });
+
+  createProductList(productsPerPage, currentPage, storage, productField);
 }
 
-function createProductList(productsOnPage: number, pageNumber: number, storage: lsObject[]) {
+function createProductList(productsOnPage: number, pageNumber: number, storage: lsObject[], field: HTMLElement) {
+  if (field.hasChildNodes()) {
+    while (field.firstChild) {
+      field.removeChild(field.firstChild);
+    }
+  }
   const start: number = (pageNumber - 1) * productsOnPage;
   const end: number = pageNumber * productsOnPage - 1;
   console.log(start, end);
@@ -245,9 +260,113 @@ function createProductList(productsOnPage: number, pageNumber: number, storage: 
     if (index >= start && index <= end) {
       console.log(index);
       products.push(el);
+
+      const cartProductWrapper = document.createElement('div');
+      cartProductWrapper.className = 'cart_product__wrapper';
+
+      const cartProductDescription = document.createElement('a');
+      cartProductDescription.className = 'cart_product__description';
+      cartProductDescription.href = `#product-details#${el.itemData.id}`;
+
+      const cartProductStock = document.createElement('div');
+      cartProductStock.className = 'cart_product__stock';
+
+      const position = document.createElement('span');
+      position.className = 'in_cart__position';
+      position.innerText = `${storage.indexOf(el) + 1}`;
+
+      const thumbNail = document.createElement('img');
+      thumbNail.className = 'product_list__image';
+      thumbNail.src = el.itemData.thumbnail;
+
+      const textDescription = document.createElement('div');
+      textDescription.className = 'product_list__text_desc';
+
+      const productTitle = document.createElement('h3');
+      productTitle.className = 'product_list__title';
+      productTitle.innerText = el.itemData.title;
+
+      const titleUnderline = document.createElement('div');
+      titleUnderline.className = 'title__underline';
+
+      const productDesc = document.createElement('div');
+      productDesc.className = 'product_list__description';
+      productDesc.innerText = el.itemData.description;
+
+      const productRating = document.createElement('div');
+      productRating.className = 'product_list__rating';
+      productRating.innerText = `Rating: ${el.itemData.rating}`;
+
+      const productDiscount = document.createElement('p');
+      productDiscount.className = 'product_list__discount';
+      productDiscount.innerText = `Discount: ${el.itemData.discountPercentage}%`;
+
+      textDescription.append(productTitle, titleUnderline, productDesc, productRating, productDiscount);
+
+      const stockAmaount = document.createElement('div');
+      stockAmaount.className = 'stock_amount';
+      stockAmaount.innerText = `Stock: ${el.itemData.stock}`;
+
+      const stockControls = document.createElement('div');
+      stockControls.className = 'stock__controls';
+
+      const increaseAmount = document.createElement('button');
+      increaseAmount.className = 'increase_amount__button';
+      increaseAmount.innerText = '+';
+      increaseAmount.addEventListener('click', () => {
+        changeProductsAmount(storage.indexOf(el), '+', productsOnPage, pageNumber, field);
+      });
+
+      const decreaseAmount = document.createElement('button');
+      decreaseAmount.className = 'decrease_amount__button';
+      decreaseAmount.innerText = `-`;
+      decreaseAmount.addEventListener('click', () => {
+        changeProductsAmount(storage.indexOf(el), '-', productsOnPage, pageNumber, field);
+      });
+
+      const productAmount = document.createElement('span');
+      productAmount.className = 'product__amount';
+      productAmount.innerText = `${el.amount}`;
+
+      const productPrice = document.createElement('p');
+      productPrice.className = 'product__price';
+      productPrice.innerText = `\u20ac${el.price.toFixed(2)}`;
+
+      stockControls.append(increaseAmount, productAmount, decreaseAmount);
+
+      cartProductStock.append(stockAmaount, stockControls, productPrice);
+
+      cartProductWrapper.append(cartProductDescription, cartProductStock);
+      cartProductDescription.append(position, thumbNail, textDescription);
+      field.append(cartProductWrapper);
     }
   });
-  console.log(products);
+}
+
+function changeProductsAmount(
+  position: number,
+  operation: string,
+  productsOnPage: number,
+  pageNumber: number,
+  field: HTMLElement
+) {
+  const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
+  if (operation === '-') {
+    storage[position].amount -= 1;
+    if (storage[position].amount === 0) {
+      storage.splice(position, 1);
+      console.log(storage);
+    }
+    window.localStorage.setItem('online_store__storage', JSON.stringify(storage));
+  } else if (operation === '+') {
+    storage[position].amount += 1;
+    if (storage[position].amount === storage[position].itemData.stock) {
+      storage[position].amount = storage[position].itemData.stock;
+    }
+    window.localStorage.setItem('online_store__storage', JSON.stringify(storage));
+  }
+  // window.localStorage.setItem('online_store__storage', JSON.stringify(storage));
+  createProductList(productsOnPage, pageNumber, storage, field);
 }
 
 export { storageCheck, checkPromoCodes, promoLine, createProductHeader };

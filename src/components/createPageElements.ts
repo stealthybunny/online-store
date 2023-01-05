@@ -6,6 +6,7 @@ export function createList(data: string[], quantity: string[], place: HTMLTempla
     const checkBoxLine = document.createElement('div');
     checkBoxLine.classList.add('checkbox__line');
     const checkBox = document.createElement('input');
+    checkBox.className = 'input__filter';
     const label = document.createElement('label');
     label.textContent = data[i];
     checkBox.setAttribute('id', `${data[i]}`);

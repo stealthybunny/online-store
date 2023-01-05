@@ -14,7 +14,7 @@ export default class App {
   private container: HTMLElement;
   private initialPage: MainPage;
 
-  static renderNewPage(pageID: string, className: string, productID?: number, sortID?: string) {
+  static renderNewPage(pageID: string, className: string, productID?: number) {
     const el = document.querySelectorAll('.main');
     if (el) {
       el.forEach((item) => {
@@ -24,9 +24,9 @@ export default class App {
     let page: Page | null = null;
 
     if (pageID === Pages.MainPage) {
-      if (sortID) {
-        console.log('category');
-      }
+      // if (sortID) {
+      //   console.log('category');
+      // }
       page = new MainPage('main-page', className);
     } else if (pageID === Pages.CartPage) {
       page = new CartPage(pageID, className);
@@ -51,10 +51,10 @@ export default class App {
     window.addEventListener('hashchange', () => {
       const hash = window.location.hash.slice(1).split('#')[0];
       const productID = Number(window.location.hash.slice(1).split('#')[1]);
-      const sortID = window.location.search;
+      // const sortID = window.location.search;
       // console.log(sortID);
       // console.log(productID);
-      App.renderNewPage(hash, 'main', productID, sortID);
+      App.renderNewPage(hash, 'main', productID);
     });
   }
 
