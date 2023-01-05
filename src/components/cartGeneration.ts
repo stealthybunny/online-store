@@ -1,6 +1,8 @@
 import { lsObject } from '../types';
+import { checkLS } from './addToCart';
 
 function getStorage() {
+  console.log('getStorage');
   const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
   let amount = 0;
   let price = 0;
@@ -12,7 +14,10 @@ function getStorage() {
 }
 
 function storageCheck(productsAmount: HTMLElement, totalCost: HTMLElement) {
+  console.log('Im working rigth now');
+  console.log(productsAmount, totalCost);
   const results: number[] = getStorage();
+  console.log(results);
   productsAmount.innerText = ` ${results[0]}`;
   totalCost.innerText = ` ${results[1]}.00 \u20ac`;
 }
@@ -27,7 +32,6 @@ function checkPromoCodes(summary: HTMLElement, totalCostLine: HTMLElement, promo
   let percent = 1;
   const promoCodes: string[] = JSON.parse(window.localStorage.getItem('online_sotre__promoCodes') as string);
 
-  console.log(promoCodes);
   if (promoCodes.includes('RS')) {
     percent -= 0.1;
   }
@@ -35,11 +39,9 @@ function checkPromoCodes(summary: HTMLElement, totalCostLine: HTMLElement, promo
     percent -= 0.1;
   }
   const newCost = percent * results[1];
-  console.log(percent);
 
   if (percent !== 1) {
     if (!totalCostLine.classList.contains('crossed')) {
-      console.log('net');
       totalCostLine.classList.add('crossed');
       const newTotalCostLine = document.createElement('p');
       newTotalCostLine.className = 'new_summary__total_line';
@@ -52,7 +54,6 @@ function checkPromoCodes(summary: HTMLElement, totalCostLine: HTMLElement, promo
       newTotalCostLine.append(newTotalCost);
       totalCostLine.after(newTotalCostLine);
     } else {
-      console.log('est');
       const newTotalCost = document.querySelector('.new_summary__total_cost') as HTMLElement;
       newTotalCost.innerText = `${newCost.toFixed(2)} \u20ac`;
     }
@@ -120,7 +121,6 @@ function promoLine(
   }
 
   const temp: string[] = JSON.parse(window.localStorage.getItem('online_sotre__promoCodes') as string);
-  console.log('parent', promoDescription.parentNode);
 
   if (valueFromInput === 'RS' || valueFromInput === 'EPM') {
     promoDescription.innerText = descriptionText;
@@ -141,7 +141,6 @@ function promoLine(
         promoInputField.placeholder = 'Enter promo code';
         if (!temp.includes(valueFromInput)) {
           temp.push(valueFromInput);
-          console.log('temp', temp);
           window.localStorage.setItem('online_sotre__promoCodes', JSON.stringify(temp));
           checkPromoCodes(summary, totalCostLine, promoDescription);
         }
@@ -153,7 +152,13 @@ function promoLine(
   }
 }
 
-function createProductHeader(productsInCart: HTMLElement, currentPage: number, productsPerPage: number) {
+function createProductHeader(
+  productsInCart: HTMLElement,
+  currentPage: number,
+  productsPerPage: number,
+  productsAmount: HTMLElement,
+  totalCost: HTMLElement
+) {
   let pagesCount = 10;
   const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
 
@@ -193,7 +198,7 @@ function createProductHeader(productsInCart: HTMLElement, currentPage: number, p
     if (currentPage > pagesCount) {
       currentPage = pagesCount;
       currentPageText.innerText = `${currentPage}`;
-      createProductList(productsPerPage, currentPage, storage, productField);
+      createProductList(productsPerPage, currentPage, storage, productField, productsAmount, totalCost);
     }
     return pagesCount;
   }
@@ -230,7 +235,7 @@ function createProductHeader(productsInCart: HTMLElement, currentPage: number, p
     if (currentPage > 1) {
       currentPage -= 1;
       currentPageText.innerText = `${currentPage}`;
-      createProductList(productsPerPage, currentPage, storage, productField);
+      createProductList(productsPerPage, currentPage, storage, productField, productsAmount, totalCost);
     }
   });
 
@@ -239,14 +244,21 @@ function createProductHeader(productsInCart: HTMLElement, currentPage: number, p
     if (currentPage < pagesCount) {
       currentPage += 1;
       currentPageText.innerText = `${currentPage}`;
-      createProductList(productsPerPage, currentPage, storage, productField);
+      createProductList(productsPerPage, currentPage, storage, productField, productsAmount, totalCost);
     }
   });
 
-  createProductList(productsPerPage, currentPage, storage, productField);
+  createProductList(productsPerPage, currentPage, storage, productField, productsAmount, totalCost);
 }
 
-function createProductList(productsOnPage: number, pageNumber: number, storage: lsObject[], field: HTMLElement) {
+function createProductList(
+  productsOnPage: number,
+  pageNumber: number,
+  storage: lsObject[],
+  field: HTMLElement,
+  productAmount: HTMLElement,
+  totalCost: HTMLElement
+) {
   if (field.hasChildNodes()) {
     while (field.firstChild) {
       field.removeChild(field.firstChild);
@@ -254,11 +266,9 @@ function createProductList(productsOnPage: number, pageNumber: number, storage: 
   }
   const start: number = (pageNumber - 1) * productsOnPage;
   const end: number = pageNumber * productsOnPage - 1;
-  console.log(start, end);
   const products: lsObject[] = [];
   storage.forEach((el, index) => {
     if (index >= start && index <= end) {
-      console.log(index);
       products.push(el);
 
       const cartProductWrapper = document.createElement('div');
@@ -314,14 +324,14 @@ function createProductList(productsOnPage: number, pageNumber: number, storage: 
       increaseAmount.className = 'increase_amount__button';
       increaseAmount.innerText = '+';
       increaseAmount.addEventListener('click', () => {
-        changeProductsAmount(storage.indexOf(el), '+', productsOnPage, pageNumber, field);
+        changeProductsAmount(storage.indexOf(el), '+', productsOnPage, pageNumber, field, productAmount, totalCost);
       });
 
       const decreaseAmount = document.createElement('button');
       decreaseAmount.className = 'decrease_amount__button';
       decreaseAmount.innerText = `-`;
       decreaseAmount.addEventListener('click', () => {
-        changeProductsAmount(storage.indexOf(el), '-', productsOnPage, pageNumber, field);
+        changeProductsAmount(storage.indexOf(el), '-', productsOnPage, pageNumber, field, productAmount, totalCost);
       });
 
       const productAmount = document.createElement('span');
@@ -348,25 +358,33 @@ function changeProductsAmount(
   operation: string,
   productsOnPage: number,
   pageNumber: number,
-  field: HTMLElement
+  field: HTMLElement,
+  productsAmount: HTMLElement,
+  totalCost: HTMLElement
 ) {
+  console.log(productsAmount);
   const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
+  const cartAmount: HTMLElement = document.querySelector('.cart__quantity') as HTMLElement;
+  const total: HTMLElement = document.querySelector('.total__amount') as HTMLElement;
   if (operation === '-') {
     storage[position].amount -= 1;
     if (storage[position].amount === 0) {
       storage.splice(position, 1);
-      console.log(storage);
     }
     window.localStorage.setItem('online_store__storage', JSON.stringify(storage));
+    storageCheck(productsAmount, totalCost);
+    checkLS(total, cartAmount, storage[position].itemData);
   } else if (operation === '+') {
     storage[position].amount += 1;
     if (storage[position].amount === storage[position].itemData.stock) {
       storage[position].amount = storage[position].itemData.stock;
     }
     window.localStorage.setItem('online_store__storage', JSON.stringify(storage));
+    storageCheck(productsAmount, totalCost);
+    checkLS(total, cartAmount, storage[position].itemData);
   }
   // window.localStorage.setItem('online_store__storage', JSON.stringify(storage));
-  createProductList(productsOnPage, pageNumber, storage, field);
+  createProductList(productsOnPage, pageNumber, storage, field, productsAmount, totalCost);
 }
 
 export { storageCheck, checkPromoCodes, promoLine, createProductHeader };

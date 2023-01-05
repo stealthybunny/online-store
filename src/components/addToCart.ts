@@ -4,14 +4,19 @@ function checkLS(total: HTMLElement, cartAmount: HTMLElement, el: productDatum, 
   const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
   const storageKeys = storage.map((el) => el.id);
   let cartTotal = 0;
+  let amount = 0;
   // let withDiscount = 0;
   storage.forEach((el) => {
-    cartTotal += el.price;
+    cartTotal += el.price * el.amount;
+    amount += el.amount;
     // withDiscount = withDiscount + (el.price *(100 - el.discount)) / 100;
   });
   total.innerText = `${cartTotal}.00 \u20ac`;
+  cartAmount.innerText = `${amount}`;
   window.localStorage.removeItem('online_store__total');
   window.localStorage.setItem('online_store__total', `${cartTotal}.00 \u20ac`);
+  window.localStorage.removeItem('online_store__amount');
+  window.localStorage.setItem('online_store__amount', `${amount}`);
   // window.localStorage.removeItem('online_store__total_discount');
   // window.localStorage.setItem('online_store__total_discount', `${withDiscount}`)
   if (addOrDropBtn) {
@@ -20,7 +25,7 @@ function checkLS(total: HTMLElement, cartAmount: HTMLElement, el: productDatum, 
     } else {
       addOrDropBtn.innerText = 'Add to Cart';
     }
-    cartAmount.innerText = `${storage.length}`;
+    cartAmount.innerText = `${amount}`;
   }
 }
 

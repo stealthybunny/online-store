@@ -25,7 +25,9 @@ export default class CartPage extends Page {
     const productsInCart = document.createElement('div');
     productsInCart.className = 'cart__products';
 
-    createProductHeader(productsInCart, 1, 3);
+    // function createSummarySection(cartWrapper: HTMLElement) {
+
+    // }
 
     const summary = document.createElement('div');
     summary.className = 'cart__summary';
@@ -57,6 +59,7 @@ export default class CartPage extends Page {
     summary.append(productsLine);
     summary.append(totalCostLine);
 
+    createProductHeader(productsInCart, 1, 3, productsAmount, totalCost);
     storageCheck(productsAmount, totalCost);
     checkPromoCodes(summary, totalCostLine);
 
