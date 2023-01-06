@@ -164,8 +164,8 @@ export default function getData() {
       searchInput.addEventListener('input', function () {
         const searchArr = finishArr.filter((item) => {
           if (
-            item.brand.includes(searchInput.value) ||
-            item.category.includes(searchInput.value) ||
+            item.brand.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            item.category.toLowerCase().includes(searchInput.value.toLowerCase()) ||
             item.discountPercentage.toString().toLowerCase().includes(searchInput.value.toLowerCase()) ||
             item.price.toString().includes(searchInput.value) ||
             item.rating.toString().includes(searchInput.value) ||
