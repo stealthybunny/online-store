@@ -202,6 +202,7 @@
   color: #79b257;
   transition: all .2s;
   border: 2px solid rgba(22, 22, 22, 0.7);
+  cursor: pointer;
 }
 .bay__btn:hover {
   transform: scale(1.05);

@@ -76,6 +76,10 @@ export default function getData() {
       const inputCheckbox = document.querySelectorAll('input');
       const filterSection = document.querySelector('.filter__section');
 
+      // document.querySelector('.reset__button')?.addEventListener('click', () => {
+      //   window.location.href = `${window.location.origin}`;
+      // });
+
       filterSection?.addEventListener('click', () => {
         newNewProd = [];
         let checkedYesOrNot = false;
