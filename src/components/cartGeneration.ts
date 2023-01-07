@@ -165,6 +165,26 @@ function promoLine(
   }
 }
 
+function pagesCountSet(
+  productsPerPage: number,
+  pagesCount: number,
+  storage: lsObject[],
+  currentPage: number,
+  currentPageText: HTMLElement,
+  productField: HTMLDivElement,
+  totalCost: HTMLElement,
+  summaryAmount: HTMLElement
+) {
+  pagesCount = Math.ceil(storage.length / productsPerPage);
+  if (currentPage > pagesCount) {
+    currentPage = pagesCount;
+    currentPageText.innerText = `${currentPage}`;
+    createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
+  }
+  console.log(pagesCount, 'pages');
+  return pagesCount;
+}
+
 function createProductHeader(
   productsInCart: HTMLElement,
   currentPage: number,
@@ -210,20 +230,18 @@ function createProductHeader(
     limitInput.min = '1';
     limitInput.className = 'limit__input';
 
-    function pagesCountSet(productsPerPage: number) {
-      pagesCount = Math.ceil(storage.length / productsPerPage);
-      if (currentPage > pagesCount) {
-        currentPage = pagesCount;
-        currentPageText.innerText = `${currentPage}`;
-        createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
-      }
-      console.log(pagesCount, 'pages');
-      return pagesCount;
-    }
-
     limitInput.addEventListener('change', () => {
       productsPerPage = parseInt(limitInput.value, 10);
-      pagesCountSet(productsPerPage);
+      pagesCountSet(
+        productsPerPage,
+        pagesCount,
+        storage,
+        currentPage,
+        currentPageText,
+        productField,
+        totalCost,
+        summaryAmount
+      );
     });
     limitBlock.append(limitText);
     limitBlock.append(limitInput);
@@ -249,7 +267,16 @@ function createProductHeader(
     productsInCart.append(productsWrapper);
 
     prevBtn.addEventListener('click', () => {
-      pagesCount = pagesCountSet(productsPerPage);
+      pagesCount = pagesCountSet(
+        productsPerPage,
+        pagesCount,
+        storage,
+        currentPage,
+        currentPageText,
+        productField,
+        totalCost,
+        summaryAmount
+      );
       if (currentPage > 1) {
         currentPage -= 1;
         currentPageText.innerText = `${currentPage}`;
@@ -258,7 +285,16 @@ function createProductHeader(
     });
 
     nextBtn.addEventListener('click', () => {
-      pagesCount = pagesCountSet(productsPerPage);
+      pagesCount = pagesCountSet(
+        productsPerPage,
+        pagesCount,
+        storage,
+        currentPage,
+        currentPageText,
+        productField,
+        totalCost,
+        summaryAmount
+      );
       if (currentPage < pagesCount) {
         currentPage += 1;
         currentPageText.innerText = `${currentPage}`;
