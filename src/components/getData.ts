@@ -1,5 +1,5 @@
 import { JSONresponse } from '../types';
-import { createList, createProducts } from './createPageElements';
+import { createList, createProducts, createRange } from './createPageElements';
 import { searchInput } from '../core/pages/main/index';
 
 export default function getData() {
@@ -15,8 +15,16 @@ export default function getData() {
 
       const categories: string[] = [];
       const brands: string[] = [];
+      const priceArr: number[] = [];
+      const stockArr: number[] = [];
 
       products.forEach((product) => {
+        if (!priceArr.includes(product.price)) {
+          priceArr.push(product.price);
+        }
+        if (!stockArr.includes(product.stock)) {
+          stockArr.push(product.stock);
+        }
         if (!categories.includes(product.category)) {
           categories.push(product.category);
         }
@@ -61,6 +69,8 @@ export default function getData() {
       let brandSearch: string[] = [];
       createList(categories, categorQuantity, document.querySelector('.categories') as HTMLTemplateElement);
       createList(brands, brandQuantity, document.querySelector('.brands') as HTMLTemplateElement);
+      createRange(document.querySelectorAll('.selector__filed')[0] as HTMLTemplateElement, priceArr);
+      createRange(document.querySelectorAll('.selector__filed')[1] as HTMLTemplateElement, stockArr);
       createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement);
 
       const inputCheckbox = document.querySelectorAll('input');

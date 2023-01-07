@@ -23,6 +23,70 @@ export function createList(data: string[], quantity: string[], place: HTMLTempla
   }
 }
 
+export function createRange(place: HTMLTemplateElement, data?: number[]): void {
+  const inputRangeleft = document.createElement('input');
+  const inputRangeRight = document.createElement('input');
+  const inputSliderTrack = document.createElement('div');
+  const titleFilter = document.createElement('div');
+  const leftBorder = document.createElement('div');
+  const rightBorder = document.createElement('div');
+
+  inputRangeleft.type = 'range';
+  inputRangeRight.type = 'range';
+
+  inputRangeleft.className = 'input__range input__range-left';
+  inputRangeRight.className = 'input__range input__range-right';
+  inputSliderTrack.className = 'input__track';
+  titleFilter.className = 'title__filter';
+
+  titleFilter.innerHTML = '—';
+
+  if (data?.length === 49) {
+    leftBorder.innerText = '€ ' + '0';
+    rightBorder.innerText = '€ ' + '100';
+  } else {
+    leftBorder.innerText = '0';
+    rightBorder.innerText = '100';
+  }
+
+  titleFilter.prepend(leftBorder);
+  titleFilter.append(rightBorder);
+
+  if (data) {
+    inputRangeleft.max = String(data?.length - 1);
+    inputRangeRight.max = String(data?.length - 1);
+  }
+
+  inputRangeleft.min = '0';
+  inputRangeRight.min = '0';
+
+  if (!place.classList.contains('input__range-left')) {
+    place.append(inputRangeleft);
+  }
+  if (!place.classList.contains('input__range-right')) {
+    place.append(inputRangeRight);
+  }
+  if (!place.classList.contains('input__track')) {
+    place.prepend(inputSliderTrack);
+  }
+  if (!place.classList.contains('title__filter')) {
+    place.prepend(titleFilter);
+  }
+  console.log(data);
+  const minGap = 2.5;
+  inputRangeleft.value = String(parseInt(inputRangeRight.value) - minGap);
+  inputRangeleft.addEventListener('input', () => {
+    if (parseInt(inputRangeRight.value) - parseInt(inputRangeleft.value) <= 0) {
+      inputRangeleft.value = String(parseInt(inputRangeRight.value) - minGap);
+    }
+  });
+  inputRangeRight.addEventListener('input', () => {
+    if (parseInt(inputRangeRight.value) - parseInt(inputRangeleft.value) <= 0) {
+      inputRangeRight.value = String(parseInt(inputRangeleft.value) + minGap);
+    }
+  });
+}
+
 export function createProducts(productData: productDatum[], place: HTMLTemplateElement): void {
   const cartAmount: HTMLElement = document.querySelector('.cart__quantity') as HTMLElement;
   const total: HTMLElement = document.querySelector('.total__amount') as HTMLElement;
