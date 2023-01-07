@@ -1,8 +1,7 @@
 import { JSONresponse } from '../types';
 import { createList, createProducts } from './createPageElements';
-import { searchInput } from '../core/pages/main/index';
 
-export default function getData() {
+export default function getData(searchInput: HTMLInputElement, foundValue: HTMLSpanElement) {
   fetch('https://dummyjson.com/products?limit=100')
     .then((response) => {
       return response.json();
@@ -61,19 +60,14 @@ export default function getData() {
       let brandSearch: string[] = [];
       createList(categories, categorQuantity, document.querySelector('.categories') as HTMLTemplateElement);
       createList(brands, brandQuantity, document.querySelector('.brands') as HTMLTemplateElement);
-      createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement);
+      createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
 
       const inputCheckbox = document.querySelectorAll('input');
       const filterSection = document.querySelector('.filter__section');
 
-      // document.querySelector('.reset__button')?.addEventListener('click', () => {
-      //   window.location.href = `${window.location.origin}`;
-      // });
-
       filterSection?.addEventListener('click', () => {
         newNewProd = [];
         let checkedYesOrNot = false;
-        // const url = new URL(window.location.href);
         const myParams = new URLSearchParams(window.location.search);
         newProdCategory = [...products];
         newProdBrand = [...products];
@@ -153,12 +147,12 @@ export default function getData() {
             return item;
           }
         });
-        createProducts(searchArr, document.querySelector('.products__field') as HTMLTemplateElement);
+        createProducts(searchArr, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
         // createProducts(finishArr, document.querySelector('.products__field') as HTMLTemplateElement);
         const fullUrl = '#?' + myParams.toString();
         history.pushState(window.location.href, '#', fullUrl);
         if (checkedYesOrNot === false) {
-          createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement);
+          createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
         }
       });
       // const toCheck = (e: number | string, e1: number | string): string => {
@@ -178,7 +172,7 @@ export default function getData() {
             return item;
           }
         });
-        createProducts(searchArr, document.querySelector('.products__field') as HTMLTemplateElement);
+        createProducts(searchArr, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
       });
     });
 }
