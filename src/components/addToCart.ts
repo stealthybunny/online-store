@@ -27,8 +27,10 @@ function checkLS(total: HTMLElement, cartAmount: HTMLElement, el?: productDatum,
     if (addOrDropBtn) {
       if (storageKeys.includes(data.id)) {
         addOrDropBtn.innerText = 'Drop from Cart';
+        addOrDropBtn.classList.add('pushed');
       } else {
         addOrDropBtn.innerText = 'Add to Cart';
+        addOrDropBtn.classList.remove('pushed');
       }
       cartAmount.innerText = `${amount}`;
     }
@@ -36,6 +38,11 @@ function checkLS(total: HTMLElement, cartAmount: HTMLElement, el?: productDatum,
 }
 
 function addToCartListener(total: HTMLElement, cartAmount: HTMLElement, el: productDatum, addOrDropBtn?: HTMLElement) {
+  if (addOrDropBtn?.classList.contains('pushed')) {
+    addOrDropBtn.classList.remove('pushed');
+  } else {
+    addOrDropBtn?.classList.add('pushed');
+  }
   const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
   const storageKeys = storage.map((el) => el.id);
   if (storageKeys.includes(el.id)) {

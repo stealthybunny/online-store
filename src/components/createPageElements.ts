@@ -23,6 +23,7 @@ export function createList(data: string[], quantity: string[], place: HTMLTempla
   }
 }
 
+
 export function createRange(place: HTMLTemplateElement, data?: number[]): void {
   const inputRangeleft = document.createElement('input');
   const inputRangeRight = document.createElement('input');
@@ -116,63 +117,90 @@ export function createProducts(productData: productDatum[], place: HTMLTemplateE
     const totalCost = 0;
     window.localStorage.setItem('online_store__total', `${totalCost}.00 \u20ac`);
     // window.localStorage.setItem('online_store__total_discount', `${totalCost}.00 \u20ac`);
+
+export function createProducts(
+  productData: productDatum[],
+  place: HTMLTemplateElement,
+  foundValue: HTMLSpanElement
+): void {
+  if (!productData.length) {
+    foundValue.innerText = '0';
+    const notFound = document.createElement('h2');
+    notFound.className = 'not_found__headline';
+    notFound.innerText = 'No products found';
+    while (place.hasChildNodes()) {
+      place.removeChild(place.childNodes[0]);
+    }
+    place.append(notFound);
   } else {
-    const totalCost: string = window.localStorage.getItem('online_store__total') as string;
-    total.innerText = `${totalCost}`;
+    foundValue.innerText = `${productData.length}`;
+    const cartAmount: HTMLElement = document.querySelector('.cart__quantity') as HTMLElement;
+    const total: HTMLElement = document.querySelector('.total__amount') as HTMLElement;
+    if (!window.localStorage.getItem('online_store__storage')) {
+      const piece: lsObject[] = [];
+      window.localStorage.setItem('online_store__storage', JSON.stringify(piece));
+    }
+    if (!window.localStorage.getItem('online_store__total')) {
+      const totalCost = 0;
+      window.localStorage.setItem('online_store__total', `${totalCost}.00 \u20ac`);
+    } else {
+      const totalCost: string = window.localStorage.getItem('online_store__total') as string;
+      total.innerText = `${totalCost}`;
+    }
+
+    place.innerHTML = '';
+    productData.forEach((el) => {
+      const productBox = document.createElement('div');
+      productBox.classList.add('product-box');
+      productBox.style.backgroundImage = `url(${el.thumbnail})`;
+
+      const boxWrapper = document.createElement('a');
+      boxWrapper.className = 'product-box__wrapper';
+      boxWrapper.href = `#product-details#${el.id}`;
+      productBox.append(boxWrapper);
+
+      const boxTitle = document.createElement('div');
+      boxTitle.classList.add('product-box__title');
+      boxTitle.textContent = el.title;
+
+      const descriptionBox = document.createElement('div');
+      descriptionBox.classList.add('product_description');
+
+      const descriptionValues: string[] = [
+        el.category,
+        el.brand,
+        `\u20ac ${el.price}`,
+        `${el.discountPercentage}%`,
+        `${el.rating}`,
+        `${el.stock}`,
+      ];
+      const descriptionParametars: string[] = ['Category: ', 'Brand: ', 'Price: ', 'Discount: ', 'Rating: ', 'Stock: '];
+
+      for (let i = 0; i < 6; i++) {
+        const paragraph = document.createElement('p');
+        const span = document.createElement('span');
+        paragraph.textContent = descriptionParametars[i];
+        span.textContent = descriptionValues[i];
+        paragraph.appendChild(span);
+        descriptionBox.appendChild(paragraph);
+      }
+
+      function addButton(element?: HTMLElement) {
+        const addOrDropBtn = document.createElement('button');
+        addOrDropBtn.className = 'addBtn';
+        element?.append(addOrDropBtn);
+
+        checkLS(total, cartAmount, el, addOrDropBtn);
+
+        addOrDropBtn.addEventListener('click', () => {
+          addToCartListener(total, cartAmount, el, addOrDropBtn);
+        });
+      }
+
+      boxWrapper.appendChild(boxTitle);
+      boxWrapper.appendChild(descriptionBox);
+      addButton(productBox);
+      place.appendChild(productBox);
+    });
   }
-
-  place.innerHTML = '';
-  productData.forEach((el) => {
-    const productBox = document.createElement('div');
-    productBox.classList.add('product-box');
-    productBox.style.backgroundImage = `url(${el.thumbnail})`;
-
-    const boxWrapper = document.createElement('a');
-    boxWrapper.className = 'product-box__wrapper';
-    boxWrapper.href = `#product-details#${el.id}`;
-    productBox.append(boxWrapper);
-
-    const boxTitle = document.createElement('div');
-    boxTitle.classList.add('product-box__title');
-    boxTitle.textContent = el.title;
-
-    const descriptionBox = document.createElement('div');
-    descriptionBox.classList.add('product_description');
-
-    const descriptionValues: string[] = [
-      el.category,
-      el.brand,
-      `\u20ac ${el.price}`,
-      `${el.discountPercentage}%`,
-      `${el.rating}`,
-      `${el.stock}`,
-    ];
-    const descriptionParametars: string[] = ['Category: ', 'Brand: ', 'Price: ', 'Discount: ', 'Rating: ', 'Stock: '];
-
-    for (let i = 0; i < 6; i++) {
-      const paragraph = document.createElement('p');
-      const span = document.createElement('span');
-      paragraph.textContent = descriptionParametars[i];
-      span.textContent = descriptionValues[i];
-      paragraph.appendChild(span);
-      descriptionBox.appendChild(paragraph);
-    }
-
-    function addButton(element?: HTMLElement) {
-      const addOrDropBtn = document.createElement('button');
-      addOrDropBtn.className = 'addBtn';
-      element?.append(addOrDropBtn);
-
-      checkLS(total, cartAmount, el, addOrDropBtn);
-
-      addOrDropBtn.addEventListener('click', () => {
-        addToCartListener(total, cartAmount, el, addOrDropBtn);
-      });
-    }
-
-    boxWrapper.appendChild(boxTitle);
-    boxWrapper.appendChild(descriptionBox);
-    addButton(productBox);
-    place.appendChild(productBox);
-  });
 }

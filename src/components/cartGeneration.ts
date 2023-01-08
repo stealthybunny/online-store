@@ -130,9 +130,21 @@ function promoLine(
 
       promoInputField.disabled = true;
       promoInputField.placeholder = 'add or reject promo code';
+
       const addPromo = document.createElement('span');
       addPromo.className = 'add_promo__button';
       addPromo.innerText = 'Add';
+
+      const rejectPromo = document.createElement('span');
+      rejectPromo.className = 'reject_promo__button';
+      rejectPromo.innerText = 'Reject';
+
+      rejectPromo.addEventListener('click', () => {
+        promoInputField.classList.remove('promo');
+        promoInputField.disabled = false;
+        promoInputField.placeholder = 'Enter promo code';
+        checkPromoCodes(summary, totalCostLine, promoDescription);
+      });
 
       addPromo.addEventListener('click', () => {
         promoInputField.classList.remove('promo');
@@ -146,11 +158,31 @@ function promoLine(
           checkPromoCodes(summary, totalCostLine, promoDescription);
         }
       });
-      promoDescription.append(addPromo);
+      promoDescription.append(addPromo, rejectPromo);
       promoInputField.after(promoDescription);
     }
     promoInputField.value = '';
   }
+}
+
+function pagesCountSet(
+  productsPerPage: number,
+  pagesCount: number,
+  storage: lsObject[],
+  currentPage: number,
+  currentPageText: HTMLElement,
+  productField: HTMLDivElement,
+  totalCost: HTMLElement,
+  summaryAmount: HTMLElement
+) {
+  pagesCount = Math.ceil(storage.length / productsPerPage);
+  if (currentPage > pagesCount) {
+    currentPage = pagesCount;
+    currentPageText.innerText = `${currentPage}`;
+    createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
+  }
+  console.log(pagesCount, 'pages');
+  return pagesCount;
 }
 
 function createProductHeader(
@@ -163,94 +195,115 @@ function createProductHeader(
   let pagesCount = 10;
   const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
 
-  // pagesCountSet(productsPerPage);
-
   if (!storage.length) {
-    return;
+    const emptyCart = document.createElement('h2');
+    emptyCart.className = 'epmty__headline';
+    emptyCart.innerText = 'Cart is empty!';
+    productsInCart.append(emptyCart);
+  } else {
+    if (!storage.length) {
+      return;
+    }
+    const productsWrapper = document.createElement('div');
+    productsWrapper.className = 'products__wrapper';
+
+    const productsHeader = document.createElement('div');
+    productsHeader.className = 'products__header_cart';
+
+    const headerHeadline = document.createElement('h2');
+    headerHeadline.className = 'products__header_headline';
+    headerHeadline.innerText = 'Products In Cart';
+    productsHeader.append(headerHeadline);
+
+    const productField = document.createElement('div');
+    productField.className = 'product_list__field';
+
+    const limitBlock = document.createElement('div');
+    limitBlock.className = 'products__limit_block';
+    const limitText = document.createElement('span');
+    limitText.className = 'limit__text';
+    limitText.innerText = 'LIMIT:';
+    const limitInput = document.createElement('input');
+    limitInput.type = 'number';
+    limitInput.defaultValue = `${productsPerPage}`;
+    limitInput.max = `${storage.length}`;
+    limitInput.min = '1';
+    limitInput.className = 'limit__input';
+
+    limitInput.addEventListener('change', () => {
+      productsPerPage = parseInt(limitInput.value, 10);
+      pagesCountSet(
+        productsPerPage,
+        pagesCount,
+        storage,
+        currentPage,
+        currentPageText,
+        productField,
+        totalCost,
+        summaryAmount
+      );
+    });
+    limitBlock.append(limitText);
+    limitBlock.append(limitInput);
+    productsHeader.append(limitBlock);
+
+    const pageBlock = document.createElement('div');
+    pageBlock.className = 'products__page_block';
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'pagination_btn';
+    prevBtn.innerText = '<';
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'pagination_btn';
+    nextBtn.innerText = '>';
+
+    const currentPageText = document.createElement('span');
+    currentPageText.innerText = `${currentPage}`;
+    currentPageText.className = 'current__page';
+    pageBlock.append(prevBtn, currentPageText, nextBtn);
+    productsHeader.append(pageBlock);
+    productsWrapper.append(productsHeader);
+    productsWrapper.append(productField);
+    productsInCart.append(productsWrapper);
+
+    prevBtn.addEventListener('click', () => {
+      pagesCount = pagesCountSet(
+        productsPerPage,
+        pagesCount,
+        storage,
+        currentPage,
+        currentPageText,
+        productField,
+        totalCost,
+        summaryAmount
+      );
+      if (currentPage > 1) {
+        currentPage -= 1;
+        currentPageText.innerText = `${currentPage}`;
+        createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      pagesCount = pagesCountSet(
+        productsPerPage,
+        pagesCount,
+        storage,
+        currentPage,
+        currentPageText,
+        productField,
+        totalCost,
+        summaryAmount
+      );
+      if (currentPage < pagesCount) {
+        currentPage += 1;
+        currentPageText.innerText = `${currentPage}`;
+        createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
+      }
+    });
+
+    createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
   }
-  const productsWrapper = document.createElement('div');
-  productsWrapper.className = 'products__wrapper';
-
-  const productsHeader = document.createElement('div');
-  productsHeader.className = 'products__header_cart';
-
-  const headerHeadline = document.createElement('h2');
-  headerHeadline.className = 'products__header_headline';
-  headerHeadline.innerText = 'Products In Cart';
-  productsHeader.append(headerHeadline);
-
-  const productField = document.createElement('div');
-  productField.className = 'product_list__field';
-
-  const limitBlock = document.createElement('div');
-  limitBlock.className = 'products__limit_block';
-  const limitText = document.createElement('span');
-  limitText.className = 'limit__text';
-  limitText.innerText = 'LIMIT:';
-  const limitInput = document.createElement('input');
-  limitInput.type = 'number';
-  limitInput.defaultValue = `${productsPerPage}`;
-  limitInput.max = `${storage.length}`;
-  limitInput.min = '1';
-  limitInput.className = 'limit__input';
-
-  function pagesCountSet(productsPerPage: number) {
-    pagesCount = Math.ceil(storage.length / productsPerPage);
-    if (currentPage > pagesCount) {
-      currentPage = pagesCount;
-      currentPageText.innerText = `${currentPage}`;
-      createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
-    }
-    console.log(pagesCount, 'pages');
-    return pagesCount;
-  }
-
-  limitInput.addEventListener('change', () => {
-    productsPerPage = parseInt(limitInput.value, 10);
-    pagesCountSet(productsPerPage);
-  });
-  limitBlock.append(limitText);
-  limitBlock.append(limitInput);
-  productsHeader.append(limitBlock);
-
-  const pageBlock = document.createElement('div');
-  pageBlock.className = 'products__page_block';
-  const prevBtn = document.createElement('button');
-  prevBtn.className = 'pagination_btn';
-  prevBtn.innerText = '<';
-
-  const nextBtn = document.createElement('button');
-  nextBtn.className = 'pagination_btn';
-  nextBtn.innerText = '>';
-
-  const currentPageText = document.createElement('span');
-  currentPageText.innerText = `${currentPage}`;
-  currentPageText.className = 'current__page';
-  pageBlock.append(prevBtn, currentPageText, nextBtn);
-  productsHeader.append(pageBlock);
-  productsWrapper.append(productsHeader);
-  productsWrapper.append(productField);
-  productsInCart.append(productsWrapper);
-
-  prevBtn.addEventListener('click', () => {
-    pagesCount = pagesCountSet(productsPerPage);
-    if (currentPage > 1) {
-      currentPage -= 1;
-      currentPageText.innerText = `${currentPage}`;
-      createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
-    }
-  });
-
-  nextBtn.addEventListener('click', () => {
-    pagesCount = pagesCountSet(productsPerPage);
-    if (currentPage < pagesCount) {
-      currentPage += 1;
-      currentPageText.innerText = `${currentPage}`;
-      createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
-    }
-  });
-
-  createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
 }
 
 function createProductList(

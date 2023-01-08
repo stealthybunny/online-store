@@ -72,7 +72,8 @@
 }
 
 .add_promo__button,
-.code_drop__button {
+.code_drop__button,
+.reject_promo__button {
   padding: 0 5px 0 5px;
   margin-left: 10px;
   background-color: white;

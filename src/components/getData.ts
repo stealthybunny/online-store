@@ -1,8 +1,9 @@
 import { JSONresponse } from '../types';
-import { createList, createProducts, createRange } from './createPageElements';
-import { searchInput } from '../core/pages/main/index';
 
-export default function getData() {
+import { createList, createProducts, createRange } from './createPageElements';
+
+
+export default function getData(searchInput: HTMLInputElement, foundValue: HTMLSpanElement) {
   fetch('https://dummyjson.com/products?limit=100')
     .then((response) => {
       return response.json();
@@ -69,12 +70,15 @@ export default function getData() {
       let brandSearch: string[] = [];
       createList(categories, categorQuantity, document.querySelector('.categories') as HTMLTemplateElement);
       createList(brands, brandQuantity, document.querySelector('.brands') as HTMLTemplateElement);
+
       createRange(document.querySelectorAll('.selector__filed')[0] as HTMLTemplateElement, priceArr);
       createRange(document.querySelectorAll('.selector__filed')[1] as HTMLTemplateElement, stockArr);
       createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement);
 
+
       const inputCheckbox = document.querySelectorAll('input');
       const filterSection = document.querySelector('.filter__section');
+
 
       const leftBorder = document.querySelectorAll('.left__border');
       const rightBorder = document.querySelectorAll('.right__border');
@@ -83,10 +87,10 @@ export default function getData() {
       //   window.location.href = `${window.location.origin}`;
       // });
 
+
       filterSection?.addEventListener('click', () => {
         newNewProd = [];
         let checkedYesOrNot = false;
-        // const url = new URL(window.location.href);
         const myParams = new URLSearchParams(window.location.search);
         newProdCategory = [...products];
         newProdBrand = [...products];
@@ -166,6 +170,9 @@ export default function getData() {
             return item;
           }
         });
+
+        createProducts(searchArr, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
+
         const rangePriceArr = searchArr.filter((item) => {
           if (
             Number(leftBorder[0].innerHTML.split(' ')[1]) <= Number(item.price) &&
@@ -177,11 +184,12 @@ export default function getData() {
           }
         });
         console.log(rangePriceArr);
+
         // createProducts(finishArr, document.querySelector('.products__field') as HTMLTemplateElement);
         const fullUrl = '#?' + myParams.toString();
         history.pushState(window.location.href, '#', fullUrl);
         if (checkedYesOrNot === false) {
-          createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement);
+          createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
         }
         createProducts(rangePriceArr, document.querySelector('.products__field') as HTMLTemplateElement);
       });
@@ -201,7 +209,7 @@ export default function getData() {
             return item;
           }
         });
-        createProducts(searchArr, document.querySelector('.products__field') as HTMLTemplateElement);
+        createProducts(searchArr, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
       });
     });
 }

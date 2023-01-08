@@ -52,6 +52,8 @@ export default class ProductDetails extends Page {
 
     const mainPhoto = document.createElement('img');
     mainPhoto.className = 'main-photo';
+    mainPhoto.src = datum.images[0];
+    mainPhoto.loading = 'lazy';
     mainPhotoContainer.append(mainPhoto);
 
     datum.images.forEach((el) => {
@@ -59,6 +61,7 @@ export default class ProductDetails extends Page {
       const img = document.createElement('img');
       img.className = 'small-img';
       img.src = el;
+      img.loading = 'lazy';
       slides.append(img);
       img.addEventListener('click', () => {
         mainPhoto.src = el;
@@ -109,16 +112,13 @@ export default class ProductDetails extends Page {
     const priceTag = document.createElement('p');
     priceTag.className = 'price-tag';
     productBuy.append(priceTag);
-    priceTag.innerText = `\u20ac${datum.price}`;
+    priceTag.innerText = `\u20ac${datum.price.toFixed(2)}`;
 
     const buyBtn = document.createElement('button');
     buyBtn.className = 'product-details__buy';
     productBuy.append(buyBtn);
     buyBtn.innerText = 'BUY NOW';
     buyBtn.addEventListener('click', () => {
-      const cartAmount: HTMLElement = document.querySelector('.cart__quantity') as HTMLElement;
-      const total: HTMLElement = document.querySelector('.total__amount') as HTMLElement;
-      addToCartListener(total, cartAmount, datum);
       window.location.assign('#cart-page');
       localStorage.setItem('clickButton', 'true');
     });

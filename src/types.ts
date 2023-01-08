@@ -26,3 +26,12 @@ export type lsObject = {
   discount: number;
   itemData: productDatum;
 };
+
+export const selectOptions: object = {
+  price_ASC: 'Sort by price ASC',
+  price_DESC: 'Sort by price DESC',
+  rating_ASC: 'Sort by rating ASC',
+  rating_DESC: 'Sort by rating DESC',
+  discount_ASC: 'Sort by discount ASC',
+  discount_DESC: 'Sort by discount DESC',
+};
