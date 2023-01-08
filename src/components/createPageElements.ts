@@ -23,6 +23,88 @@ export function createList(data: string[], quantity: string[], place: HTMLTempla
   }
 }
 
+export function createRange(place: HTMLTemplateElement, data?: number[]): void {
+  const inputRangeleft = document.createElement('input');
+  const inputRangeRight = document.createElement('input');
+  const inputSliderTrack = document.createElement('div');
+  const titleFilter = document.createElement('div');
+  const leftBorder = document.createElement('div');
+  const rightBorder = document.createElement('div');
+
+  inputRangeleft.type = 'range';
+  inputRangeRight.type = 'range';
+
+  data?.sort(function (a: number, b: number): number {
+    return a - b;
+  });
+  console.log(data);
+
+  inputRangeleft.className = 'input__range input__range-left';
+  inputRangeRight.className = 'input__range input__range-right';
+  inputSliderTrack.className = 'input__track';
+  titleFilter.className = 'title__filter';
+  leftBorder.className = 'left__border';
+  rightBorder.className = 'right__border';
+
+  titleFilter.innerHTML = '—';
+
+  if (data?.length === 49) {
+    leftBorder.innerText = '€ ' + data[0];
+    rightBorder.innerText = '€ ' + data[data.length - 1];
+  } else if (data) {
+    leftBorder.innerText = String(data[0]);
+    rightBorder.innerText = String(data[data.length - 1]);
+  }
+
+  titleFilter.prepend(leftBorder);
+  titleFilter.append(rightBorder);
+
+  if (data) {
+    inputRangeleft.max = String(data?.length - 1);
+    inputRangeRight.max = String(data?.length - 1);
+  }
+
+  inputRangeleft.min = '0';
+  inputRangeRight.min = '0';
+
+  if (!place.classList.contains('input__range input__range-left')) {
+    place.append(inputRangeleft);
+  }
+  if (!place.classList.contains('input__range input__range-right')) {
+    place.append(inputRangeRight);
+  }
+  if (!place.classList.contains('input__track')) {
+    place.prepend(inputSliderTrack);
+  }
+  if (!place.classList.contains('title__filter')) {
+    place.prepend(titleFilter);
+  }
+  inputRangeleft.value = '0';
+  inputRangeRight.value = '100';
+  const minGap = 1;
+  // inputRangeleft.value = String(parseInt(inputRangeRight.value) - minGap);
+  inputRangeleft.addEventListener('input', () => {
+    if (parseInt(inputRangeRight.value) - parseInt(inputRangeleft.value) <= 0) {
+      inputRangeleft.value = String(parseInt(inputRangeRight.value) - minGap);
+    }
+    if (data?.length === 49) {
+      leftBorder.innerText = '€ ' + data[Number(inputRangeleft.value)];
+    } else if (data) {
+      leftBorder.innerText = String(data[Number(inputRangeleft.value)]);
+    }
+  });
+  inputRangeRight.addEventListener('input', () => {
+    if (parseInt(inputRangeRight.value) - parseInt(inputRangeleft.value) <= 0) {
+      inputRangeRight.value = String(parseInt(inputRangeleft.value) + minGap);
+    }
+    if (data?.length === 49) {
+      rightBorder.innerText = '€ ' + data[Number(inputRangeRight.value)];
+    } else if (data) {
+      rightBorder.innerText = String(data[Number(inputRangeRight.value)]);
+    }
+  });
+}
+
 export function createProducts(productData: productDatum[], place: HTMLTemplateElement): void {
   const cartAmount: HTMLElement = document.querySelector('.cart__quantity') as HTMLElement;
   const total: HTMLElement = document.querySelector('.total__amount') as HTMLElement;
