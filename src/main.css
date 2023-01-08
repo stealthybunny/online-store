@@ -65,6 +65,17 @@
   bottom: 0;
   background-color: transparent;
   pointer-events: none;
+  transition: all .2s;
+}
+
+.input__range::-webkit-slider-thumb:hover {
+  background-color: #7ac94c;
+  transition: all .2s;
+}
+
+.input__range::-webkit-slider-thumb:active {
+  background-color: #acc49e;
+  transition: all .2s;
 }
 
 .input__track {

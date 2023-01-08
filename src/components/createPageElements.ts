@@ -34,19 +34,26 @@ export function createRange(place: HTMLTemplateElement, data?: number[]): void {
   inputRangeleft.type = 'range';
   inputRangeRight.type = 'range';
 
+  data?.sort(function (a: number, b: number): number {
+    return a - b;
+  });
+  console.log(data);
+
   inputRangeleft.className = 'input__range input__range-left';
   inputRangeRight.className = 'input__range input__range-right';
   inputSliderTrack.className = 'input__track';
   titleFilter.className = 'title__filter';
+  leftBorder.className = 'left__border';
+  rightBorder.className = 'right__border';
 
   titleFilter.innerHTML = '—';
 
   if (data?.length === 49) {
-    leftBorder.innerText = '€ ' + '0';
-    rightBorder.innerText = '€ ' + '100';
-  } else {
-    leftBorder.innerText = '0';
-    rightBorder.innerText = '100';
+    leftBorder.innerText = '€ ' + data[0];
+    rightBorder.innerText = '€ ' + data[data.length - 1];
+  } else if (data) {
+    leftBorder.innerText = String(data[0]);
+    rightBorder.innerText = String(data[data.length - 1]);
   }
 
   titleFilter.prepend(leftBorder);
@@ -60,10 +67,10 @@ export function createRange(place: HTMLTemplateElement, data?: number[]): void {
   inputRangeleft.min = '0';
   inputRangeRight.min = '0';
 
-  if (!place.classList.contains('input__range-left')) {
+  if (!place.classList.contains('input__range input__range-left')) {
     place.append(inputRangeleft);
   }
-  if (!place.classList.contains('input__range-right')) {
+  if (!place.classList.contains('input__range input__range-right')) {
     place.append(inputRangeRight);
   }
   if (!place.classList.contains('input__track')) {
@@ -72,17 +79,28 @@ export function createRange(place: HTMLTemplateElement, data?: number[]): void {
   if (!place.classList.contains('title__filter')) {
     place.prepend(titleFilter);
   }
-  console.log(data);
-  const minGap = 2.5;
-  inputRangeleft.value = String(parseInt(inputRangeRight.value) - minGap);
+  inputRangeleft.value = '0';
+  inputRangeRight.value = '100';
+  const minGap = 1;
+  // inputRangeleft.value = String(parseInt(inputRangeRight.value) - minGap);
   inputRangeleft.addEventListener('input', () => {
     if (parseInt(inputRangeRight.value) - parseInt(inputRangeleft.value) <= 0) {
       inputRangeleft.value = String(parseInt(inputRangeRight.value) - minGap);
+    }
+    if (data?.length === 49) {
+      leftBorder.innerText = '€ ' + data[Number(inputRangeleft.value)];
+    } else if (data) {
+      leftBorder.innerText = String(data[Number(inputRangeleft.value)]);
     }
   });
   inputRangeRight.addEventListener('input', () => {
     if (parseInt(inputRangeRight.value) - parseInt(inputRangeleft.value) <= 0) {
       inputRangeRight.value = String(parseInt(inputRangeleft.value) + minGap);
+    }
+    if (data?.length === 49) {
+      rightBorder.innerText = '€ ' + data[Number(inputRangeRight.value)];
+    } else if (data) {
+      rightBorder.innerText = String(data[Number(inputRangeRight.value)]);
     }
   });
 }
