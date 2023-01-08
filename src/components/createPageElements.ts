@@ -23,8 +23,10 @@ export function createList(data: string[], quantity: string[], place: HTMLTempla
   }
 }
 
-
 export function createRange(place: HTMLTemplateElement, data?: number[]): void {
+  while (place.hasChildNodes()) {
+    place.removeChild(place.childNodes[0]);
+  }
   const inputRangeleft = document.createElement('input');
   const inputRangeRight = document.createElement('input');
   const inputSliderTrack = document.createElement('div');
@@ -105,18 +107,6 @@ export function createRange(place: HTMLTemplateElement, data?: number[]): void {
     }
   });
 }
-
-export function createProducts(productData: productDatum[], place: HTMLTemplateElement): void {
-  const cartAmount: HTMLElement = document.querySelector('.cart__quantity') as HTMLElement;
-  const total: HTMLElement = document.querySelector('.total__amount') as HTMLElement;
-  if (!window.localStorage.getItem('online_store__storage')) {
-    const piece: lsObject[] = [];
-    window.localStorage.setItem('online_store__storage', JSON.stringify(piece));
-  }
-  if (!window.localStorage.getItem('online_store__total')) {
-    const totalCost = 0;
-    window.localStorage.setItem('online_store__total', `${totalCost}.00 \u20ac`);
-    // window.localStorage.setItem('online_store__total_discount', `${totalCost}.00 \u20ac`);
 
 export function createProducts(
   productData: productDatum[],

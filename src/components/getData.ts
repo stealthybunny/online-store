@@ -2,7 +2,6 @@ import { JSONresponse } from '../types';
 
 import { createList, createProducts, createRange } from './createPageElements';
 
-
 export default function getData(searchInput: HTMLInputElement, foundValue: HTMLSpanElement) {
   fetch('https://dummyjson.com/products?limit=100')
     .then((response) => {
@@ -73,12 +72,10 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
 
       createRange(document.querySelectorAll('.selector__filed')[0] as HTMLTemplateElement, priceArr);
       createRange(document.querySelectorAll('.selector__filed')[1] as HTMLTemplateElement, stockArr);
-      createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement);
-
+      createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
 
       const inputCheckbox = document.querySelectorAll('input');
       const filterSection = document.querySelector('.filter__section');
-
 
       const leftBorder = document.querySelectorAll('.left__border');
       const rightBorder = document.querySelectorAll('.right__border');
@@ -86,7 +83,6 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
       // document.querySelector('.reset__button')?.addEventListener('click', () => {
       //   window.location.href = `${window.location.origin}`;
       // });
-
 
       filterSection?.addEventListener('click', () => {
         newNewProd = [];
@@ -191,7 +187,7 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
         if (checkedYesOrNot === false) {
           createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
         }
-        createProducts(rangePriceArr, document.querySelector('.products__field') as HTMLTemplateElement);
+        createProducts(rangePriceArr, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
       });
       // const toCheck = (e: number | string, e1: number | string): string => {
       //   return e.toString().toLowerCase().includes(e1.toLowerCase());
