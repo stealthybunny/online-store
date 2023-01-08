@@ -5,7 +5,7 @@ import ProductDetails from '../product-details/index';
 import NotFound from '../404/index';
 
 const enum Pages {
-  MainPage = ``,
+  MainPage = 'main',
   ProductDetails = 'product-details',
   CartPage = 'cart-page',
 }
@@ -15,6 +15,7 @@ export default class App {
   private initialPage: MainPage;
 
   static renderNewPage(pageID: string, className: string, productID?: number) {
+    console.log('pageID', pageID);
     const el = document.querySelectorAll('.main');
     if (el) {
       el.forEach((item) => {
@@ -23,7 +24,8 @@ export default class App {
     }
     let page: Page | null = null;
 
-    if (pageID === Pages.MainPage) {
+    if (pageID === Pages.MainPage || pageID === '') {
+      window.location.assign('#main');
       // if (sortID) {
       //   console.log('category');
       // }
@@ -48,13 +50,36 @@ export default class App {
   }
 
   private enableRouteChange() {
-    window.addEventListener('hashchange', () => {
-      const hash = window.location.hash.slice(1).split('#')[0];
+    function updateState() {
+      const urlString = window.location.hash.slice(1).split('#')[0];
+      const hash = urlString.slice(0).split('?')[0];
+      const parameters = urlString.slice(1).split('?')[1];
+      console.log(parameters);
+      // console.log('hash:', hash)
+      //   console.log('query:', parameters)
+      //   const productID = Number(window.location.hash.slice(1).split('#')[1]);
+      //   // const sortID = window.location.search;
+      //   // console.log(sortID);
+      //   // console.log(productID);
+      //   App.renderNewPage(hash, 'main', productID);
       const productID = Number(window.location.hash.slice(1).split('#')[1]);
-      // const sortID = window.location.search;
-      // console.log(sortID);
-      // console.log(productID);
-      App.renderNewPage(hash, 'main', productID);
+
+      if (!parameters) {
+        console.log('hash:', hash);
+        console.log('query:', parameters);
+        // const sortID = window.location.search;
+        // console.log(sortID);
+        // console.log(productID);
+        App.renderNewPage(hash, 'main', productID);
+      } else {
+        App.renderNewPage(hash, 'main', productID);
+      }
+    }
+    window.addEventListener('hashchange', () => {
+      updateState();
+    });
+    window.addEventListener('load', () => {
+      updateState();
     });
   }
 
@@ -64,7 +89,7 @@ export default class App {
   }
 
   run() {
-    App.renderNewPage('', 'main');
+    App.renderNewPage('main', 'main');
     this.enableRouteChange();
   }
 }

@@ -173,16 +173,32 @@ function pagesCountSet(
   currentPageText: HTMLElement,
   productField: HTMLDivElement,
   totalCost: HTMLElement,
-  summaryAmount: HTMLElement
+  summaryAmount: HTMLElement,
+  productsInCart: HTMLElement
 ) {
   pagesCount = Math.ceil(storage.length / productsPerPage);
   if (currentPage > pagesCount) {
     currentPage = pagesCount;
     currentPageText.innerText = `${currentPage}`;
-    createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
+    createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount, productsInCart);
   }
   console.log(pagesCount, 'pages');
   return pagesCount;
+}
+
+function emptyLSChecker(productsInCart: HTMLElement) {
+  const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
+  if (!storage.length) {
+    if (productsInCart.hasChildNodes()) {
+      while (productsInCart.firstChild) {
+        productsInCart.removeChild(productsInCart.firstChild);
+      }
+    }
+    const emptyCart = document.createElement('h2');
+    emptyCart.className = 'epmty__headline';
+    emptyCart.innerText = 'Cart is empty!';
+    productsInCart.append(emptyCart);
+  }
 }
 
 function createProductHeader(
@@ -195,6 +211,7 @@ function createProductHeader(
   let pagesCount = 10;
   const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
 
+  // emptyLSChecker(productsInCart);
   if (!storage.length) {
     const emptyCart = document.createElement('h2');
     emptyCart.className = 'epmty__headline';
@@ -240,7 +257,8 @@ function createProductHeader(
         currentPageText,
         productField,
         totalCost,
-        summaryAmount
+        summaryAmount,
+        productsInCart
       );
     });
     limitBlock.append(limitText);
@@ -275,12 +293,21 @@ function createProductHeader(
         currentPageText,
         productField,
         totalCost,
-        summaryAmount
+        summaryAmount,
+        productsInCart
       );
       if (currentPage > 1) {
         currentPage -= 1;
         currentPageText.innerText = `${currentPage}`;
-        createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
+        createProductList(
+          productsPerPage,
+          currentPage,
+          storage,
+          productField,
+          totalCost,
+          summaryAmount,
+          productsInCart
+        );
       }
     });
 
@@ -293,16 +320,25 @@ function createProductHeader(
         currentPageText,
         productField,
         totalCost,
-        summaryAmount
+        summaryAmount,
+        productsInCart
       );
       if (currentPage < pagesCount) {
         currentPage += 1;
         currentPageText.innerText = `${currentPage}`;
-        createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
+        createProductList(
+          productsPerPage,
+          currentPage,
+          storage,
+          productField,
+          totalCost,
+          summaryAmount,
+          productsInCart
+        );
       }
     });
 
-    createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount);
+    createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount, productsInCart);
   }
 }
 
@@ -312,7 +348,8 @@ function createProductList(
   storage: lsObject[],
   field: HTMLElement,
   totalCost: HTMLElement,
-  summaryAmount: HTMLElement
+  summaryAmount: HTMLElement,
+  productsInCart: HTMLElement
 ) {
   if (field.hasChildNodes()) {
     while (field.firstChild) {
@@ -384,7 +421,8 @@ function createProductList(
           field,
           productAmount,
           totalCost,
-          summaryAmount
+          summaryAmount,
+          productsInCart
         );
       });
 
@@ -400,7 +438,8 @@ function createProductList(
           field,
           productAmount,
           totalCost,
-          summaryAmount
+          summaryAmount,
+          productsInCart
         );
       });
 
@@ -431,7 +470,8 @@ function changeProductsAmount(
   field: HTMLElement,
   productAmount: HTMLElement,
   totalCost: HTMLElement,
-  summaryAmount: HTMLElement
+  summaryAmount: HTMLElement,
+  productsInCart: HTMLElement
 ) {
   const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
   const cartAmount: HTMLElement = document.querySelector('.cart__quantity') as HTMLElement;
@@ -444,11 +484,12 @@ function changeProductsAmount(
       storageCheck(summaryAmount, totalCost);
       checkLS(total, cartAmount);
       totalAndAmount(summaryAmount, totalCost);
+      emptyLSChecker(productsInCart);
 
       if (field.hasChildNodes()) {
-        createProductList(productsOnPage, pageNumber, storage, field, totalCost, summaryAmount);
+        createProductList(productsOnPage, pageNumber, storage, field, totalCost, summaryAmount, productsInCart);
       } else {
-        createProductList(productsOnPage, pageNumber - 1, storage, field, totalCost, summaryAmount);
+        createProductList(productsOnPage, pageNumber - 1, storage, field, totalCost, summaryAmount, productsInCart);
       }
     }
     window.localStorage.setItem('online_store__storage', JSON.stringify(storage));

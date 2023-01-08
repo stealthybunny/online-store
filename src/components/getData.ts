@@ -80,10 +80,6 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
       const leftBorder = document.querySelectorAll('.left__border');
       const rightBorder = document.querySelectorAll('.right__border');
 
-      // document.querySelector('.reset__button')?.addEventListener('click', () => {
-      //   window.location.href = `${window.location.origin}`;
-      // });
-
       filterSection?.addEventListener('click', () => {
         newNewProd = [];
         let checkedYesOrNot = false;
@@ -182,7 +178,7 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
         console.log(rangePriceArr);
 
         // createProducts(finishArr, document.querySelector('.products__field') as HTMLTemplateElement);
-        const fullUrl = '#?' + myParams.toString();
+        const fullUrl = '#main?' + myParams.toString();
         history.pushState(window.location.href, '#', fullUrl);
         if (checkedYesOrNot === false) {
           createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);

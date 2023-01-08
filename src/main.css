@@ -129,6 +129,7 @@
 
 .block__headliner {
   padding-left: 15px;
+  background-color: #79b257;
 }
 
 .products__block {
@@ -145,6 +146,27 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
+}
+
+.choose_apperiance {
+  display: flex;
+  gap: 15px;
+
+}
+
+.apperiance__small,
+.apperiance__big {
+  display: flex;
+  flex-wrap: wrap;
+  width: 28px;
+  height: 28px;
+  gap: 2px;
+  cursor: pointer;
+  border: 2px solid white;
+  padding: 2px;
+}
+.apperiance__big {
+  gap: 3px;
 }
 
 .products__field {
