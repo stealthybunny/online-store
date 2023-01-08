@@ -80,7 +80,11 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
       const leftBorder = document.querySelectorAll('.left__border');
       const rightBorder = document.querySelectorAll('.right__border');
 
-      filterSection?.addEventListener('click', () => {
+      // document.querySelector('.reset__button')?.addEventListener('click', () => {
+      //   window.location.href = `${window.location.origin}`;
+      // });
+
+      const filterFunc = () => {
         newNewProd = [];
         let checkedYesOrNot = false;
         const myParams = new URLSearchParams(window.location.search);
@@ -143,6 +147,7 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
             }
           }
         });
+
         newProdCategory.forEach((prodC) => {
           newProdBrand.forEach((prodB) => {
             if (prodC === prodB) {
@@ -150,10 +155,11 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
             }
           });
         });
+
         const searchArr = finishArr.filter((item) => {
           if (
-            item.brand.includes(searchInput.value) ||
-            item.category.includes(searchInput.value) ||
+            item.brand.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            item.category.toLowerCase().includes(searchInput.value.toLowerCase()) ||
             item.discountPercentage.toString().toLowerCase().includes(searchInput.value.toLowerCase()) ||
             item.price.toString().includes(searchInput.value) ||
             item.rating.toString().includes(searchInput.value) ||
@@ -175,33 +181,24 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
             return item;
           }
         });
-        console.log(rangePriceArr);
 
-        // createProducts(finishArr, document.querySelector('.products__field') as HTMLTemplateElement);
+
         const fullUrl = '#main?' + myParams.toString();
         history.pushState(window.location.href, '#', fullUrl);
         if (checkedYesOrNot === false) {
           createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
         }
         createProducts(rangePriceArr, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
+      };
+
+      filterSection?.addEventListener('click', () => {
+        filterFunc();
+      });
+      searchInput.addEventListener('input', function () {
+        filterFunc();
       });
       // const toCheck = (e: number | string, e1: number | string): string => {
       //   return e.toString().toLowerCase().includes(e1.toLowerCase());
       // };
-      searchInput.addEventListener('input', function () {
-        const searchArr = finishArr.filter((item) => {
-          if (
-            item.brand.toLowerCase().includes(searchInput.value.toLowerCase()) ||
-            item.category.toLowerCase().includes(searchInput.value.toLowerCase()) ||
-            item.discountPercentage.toString().toLowerCase().includes(searchInput.value.toLowerCase()) ||
-            item.price.toString().includes(searchInput.value) ||
-            item.rating.toString().includes(searchInput.value) ||
-            item.title.toLowerCase().includes(searchInput.value.toLowerCase())
-          ) {
-            return item;
-          }
-        });
-        createProducts(searchArr, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
-      });
     });
 }
