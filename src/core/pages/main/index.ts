@@ -1,7 +1,6 @@
 import Page from '../../templates/page';
 import getData from '../../../components/getData';
 import { selectOptions } from '../../../types';
-import { addSortingOptionToUrl } from './urlInteractions';
 
 export default class MainPage extends Page {
   static TextObject = {
@@ -24,6 +23,7 @@ export default class MainPage extends Page {
     resetButton.classList.add('filter__button');
     resetButton.innerText = 'Reset';
     resetButton.addEventListener('click', () => {
+      window.localStorage.removeItem('productsArr');
       window.location.assign('#main');
     });
 
@@ -163,7 +163,6 @@ export default class MainPage extends Page {
 
     selectBar.addEventListener('change', () => {
       console.log(selectBar.value);
-      addSortingOptionToUrl(selectBar.value);
     });
 
     selectBar.append(titleOption);
@@ -191,6 +190,8 @@ export default class MainPage extends Page {
     small.className = 'apperiance__small';
     small.addEventListener('click', () => {
       if (window.localStorage.getItem('size') !== 'small') {
+        big.style.background = '#79b257';
+        small.style.background = 'gray';
         window.localStorage.setItem('size', 'small');
         getData(searchInput, foundValue);
       }
@@ -200,6 +201,8 @@ export default class MainPage extends Page {
     big.className = 'apperiance__big';
     big.addEventListener('click', () => {
       if (window.localStorage.getItem('size') !== 'big') {
+        big.style.background = 'gray';
+        small.style.background = '#79b257';
         window.localStorage.setItem('size', 'big');
         getData(searchInput, foundValue);
       }
