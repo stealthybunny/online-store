@@ -25,7 +25,7 @@ export default class App {
     let page: Page | null = null;
 
     if (pageID === Pages.MainPage || pageID === '') {
-      window.location.assign('#main');
+      // window.location.assign('#main');
       // if (sortID) {
       //   console.log('category');
       // }
@@ -89,7 +89,7 @@ export default class App {
   }
 
   run() {
-    App.renderNewPage('main', 'main');
+    App.renderNewPage('#main', 'main');
     this.enableRouteChange();
   }
 }

@@ -80,10 +80,6 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
       const leftBorder = document.querySelectorAll('.left__border');
       const rightBorder = document.querySelectorAll('.right__border');
 
-      // document.querySelector('.reset__button')?.addEventListener('click', () => {
-      //   window.location.href = `${window.location.origin}`;
-      // });
-
       const filterFunc = () => {
         newNewProd = [];
         let checkedYesOrNot = false;
@@ -155,7 +151,9 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
             }
           });
         });
-
+        if (!finishArr.length) {
+          window.localStorage.setItem('productsArr', JSON.stringify(products));
+        }
         const searchArr = finishArr.filter((item) => {
           if (
             item.brand.toLowerCase().includes(searchInput.value.toLowerCase()) ||
@@ -169,6 +167,7 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
           }
         });
 
+        window.localStorage.setItem('productsArr', JSON.stringify(searchArr));
         createProducts(searchArr, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
 
         const rangePriceArr = searchArr.filter((item) => {
@@ -181,7 +180,6 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
             return item;
           }
         });
-
 
         const fullUrl = '#main?' + myParams.toString();
         history.pushState(window.location.href, '#', fullUrl);
