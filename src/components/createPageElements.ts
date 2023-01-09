@@ -113,6 +113,11 @@ export function createProducts(
   place: HTMLTemplateElement,
   foundValue: HTMLSpanElement
 ): void {
+  const productsArr: productDatum[] = JSON.parse(window.localStorage.getItem('productsArr') as string);
+  if (productsArr) {
+    productData = productsArr;
+  }
+  const size = window.localStorage.getItem('size');
   if (!productData.length) {
     foundValue.innerText = '0';
     const notFound = document.createElement('h2');
@@ -142,6 +147,8 @@ export function createProducts(
     productData.forEach((el) => {
       const productBox = document.createElement('div');
       productBox.classList.add('product-box');
+      productBox.classList.add(`${size}-box`);
+
       productBox.style.backgroundImage = `url(${el.thumbnail})`;
 
       const boxWrapper = document.createElement('a');
@@ -151,9 +158,11 @@ export function createProducts(
 
       const boxTitle = document.createElement('div');
       boxTitle.classList.add('product-box__title');
+      boxTitle.classList.add(`${size}-title`);
       boxTitle.textContent = el.title;
 
       const descriptionBox = document.createElement('div');
+      descriptionBox.classList.add(`${size}-description`);
       descriptionBox.classList.add('product_description');
 
       const descriptionValues: string[] = [
