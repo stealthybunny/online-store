@@ -56,6 +56,7 @@ body {
   display: flex;
   align-items: center;
   color: #79b257;
+  text-decoration: none;
 }
 
 .cart__pic {

@@ -6,6 +6,6 @@ app.run();
 import './template.css';
 import './main.css';
 
-window.addEventListener('load', () => {
-  window.location.assign('#');
-});
+// window.addEventListener('load', () => {
+//   window.location.assign('#');
+// });

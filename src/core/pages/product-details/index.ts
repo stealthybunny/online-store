@@ -2,6 +2,7 @@ import { JSONresponse, productDatum } from '../../../types';
 import Page from '../../templates/page';
 import './product-details.css';
 import { addToCartListener, checkLS } from '../../../components/addToCart';
+// import { lsObject } from '../../../types';
 
 export default class ProductDetails extends Page {
   static TextObject = {
@@ -119,6 +120,9 @@ export default class ProductDetails extends Page {
     productBuy.append(buyBtn);
     buyBtn.innerText = 'BUY NOW';
     buyBtn.addEventListener('click', () => {
+      if (!cartBtn.classList.contains('pushed')) {
+        addToCartListener(total, cartAmount, datum, cartBtn);
+      }
       window.location.assign('#cart-page');
       localStorage.setItem('clickButton', 'true');
     });

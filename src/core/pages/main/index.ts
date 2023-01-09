@@ -1,6 +1,7 @@
 import Page from '../../templates/page';
 import getData from '../../../components/getData';
 import { selectOptions } from '../../../types';
+import { addSortingOptionToUrl } from './urlInteractions';
 
 export default class MainPage extends Page {
   static TextObject = {
@@ -16,7 +17,7 @@ export default class MainPage extends Page {
     filterSection.className = 'filter__section';
     filterSection.innerHTML = `
     <div class="filter__buttons">
-          <a href="#" class="reset__button filter__button">Reset</a>
+          <a href="#main" class="reset__button filter__button">Reset</a>
           <button class="copy-link__button filter__button">Copy Link</button>
         </div>
         <div class="filter__by-catgory filter__block">
@@ -74,6 +75,11 @@ export default class MainPage extends Page {
     titleOption.value = 'sort-title';
     titleOption.selected = true;
 
+    selectBar.addEventListener('change', () => {
+      console.log(selectBar.value);
+      addSortingOptionToUrl(selectBar.value);
+    });
+
     selectBar.append(titleOption);
 
     const optionsEntries = Object.entries(selectOptions);
@@ -93,7 +99,34 @@ export default class MainPage extends Page {
     foundValue.className = 'found__value';
     found.append(foundValue);
 
-    productsHeader.append(selectBar, found, searchInput);
+    const chooseApperiance = document.createElement('div');
+    chooseApperiance.className = 'choose_apperiance';
+
+    const small = document.createElement('div');
+    small.className = 'apperiance__small';
+
+    const big = document.createElement('div');
+    big.className = 'apperiance__big';
+
+    for (let i = 0; i < 25; i += 1) {
+      const smallPiece = document.createElement('div');
+      smallPiece.style.width = '4px';
+      smallPiece.style.height = '4px';
+      smallPiece.style.backgroundColor = 'white';
+      small.append(smallPiece);
+    }
+
+    for (let i = 0; i < 9; i += 1) {
+      const bigPiece = document.createElement('div');
+      bigPiece.style.width = '7px';
+      bigPiece.style.height = '7px';
+      bigPiece.style.backgroundColor = 'white';
+      big.append(bigPiece);
+    }
+
+    chooseApperiance.append(small, big);
+
+    productsHeader.append(selectBar, found, searchInput, chooseApperiance);
 
     getData(searchInput, foundValue);
   }

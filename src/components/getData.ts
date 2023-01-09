@@ -182,7 +182,8 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
           }
         });
 
-        const fullUrl = '#?' + myParams.toString();
+
+        const fullUrl = '#main?' + myParams.toString();
         history.pushState(window.location.href, '#', fullUrl);
         if (checkedYesOrNot === false) {
           createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
