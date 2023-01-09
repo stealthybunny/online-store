@@ -116,7 +116,7 @@ export function createProducts(
   const productsArr: productDatum[] = JSON.parse(window.localStorage.getItem('productsArr') as string);
   if (productsArr) {
     productData = productsArr;
-  }
+  } 
   const size = window.localStorage.getItem('size');
   if (!productData.length) {
     foundValue.innerText = '0';

@@ -3,6 +3,7 @@ import CartPage from '../cart/index';
 import MainPage from '../main/index';
 import ProductDetails from '../product-details/index';
 import NotFound from '../404/index';
+import { parseUrl } from '../main/urlInteractions';
 
 const enum Pages {
   MainPage = 'main',
@@ -54,7 +55,9 @@ export default class App {
       const urlString = window.location.hash.slice(1).split('#')[0];
       const hash = urlString.slice(0).split('?')[0];
       const parameters = urlString.slice(1).split('?')[1];
-      console.log(parameters);
+
+      // console.log(parameters.split('%E2%86%95'));
+
       // console.log('hash:', hash)
       //   console.log('query:', parameters)
       //   const productID = Number(window.location.hash.slice(1).split('#')[1]);
@@ -65,11 +68,12 @@ export default class App {
       const productID = Number(window.location.hash.slice(1).split('#')[1]);
 
       if (!parameters) {
-        console.log('hash:', hash);
-        console.log('query:', parameters);
+        // console.log('hash:', hash);
+        // console.log('query:', parameters);
         // const sortID = window.location.search;
         // console.log(sortID);
         // console.log(productID);
+        parseUrl(window.location.hash);
         App.renderNewPage(hash, 'main', productID);
       } else {
         App.renderNewPage(hash, 'main', productID);

@@ -213,6 +213,7 @@
 .product-box__wrapper {
   outline: none;
   text-decoration: none;
+  height: 100%;
 }
 
 .product-box__title {

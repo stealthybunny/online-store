@@ -3,6 +3,7 @@ import { JSONresponse } from '../types';
 import { createList, createProducts, createRange } from './createPageElements';
 
 export default function getData(searchInput: HTMLInputElement, foundValue: HTMLSpanElement) {
+  console.log('getData');
   fetch('https://dummyjson.com/products?limit=100')
     .then((response) => {
       return response.json();
@@ -152,7 +153,9 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
           });
         });
         if (!finishArr.length) {
+          console.log('peoductsArr!!!')
           window.localStorage.setItem('productsArr', JSON.stringify(products));
+
         }
         const searchArr = finishArr.filter((item) => {
           if (

@@ -27,6 +27,8 @@ export type lsObject = {
   itemData: productDatum;
 };
 
+export type queryObj = [parameter?: string, values?: string[]];
+
 export const selectOptions: object = {
   price_ASC: 'Sort by price ASC',
   price_DESC: 'Sort by price DESC',
