@@ -161,19 +161,21 @@ export default class MainPage extends Page {
     titleOption.value = 'sort-title';
     titleOption.selected = true;
 
-    selectBar.addEventListener('change', () => {
-      console.log(selectBar.value);
-    });
+    // selectBar.addEventListener('change', () => {
+    //   console.log(selectBar.value);
+    // });
 
     selectBar.append(titleOption);
 
     const optionsEntries = Object.entries(selectOptions);
     optionsEntries.forEach((el) => {
-      const option = document.createElement('option');
-      option.className = 'select_bar__option';
-      option.value = el[0];
-      option.innerText = el[1];
-      selectBar.append(option);
+      if (el[0] !== 'discount_ASC' && el[0] !== 'discount_DESC') {
+        const option = document.createElement('option');
+        option.className = 'select_bar__option';
+        option.value = el[0];
+        option.innerText = el[1];
+        selectBar.append(option);
+      }
     });
 
     const found = document.createElement('span');
