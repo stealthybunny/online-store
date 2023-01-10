@@ -3,7 +3,7 @@ import { JSONresponse } from '../types';
 import { createList, createProducts, createRange } from './createPageElements';
 
 export default function getData(searchInput: HTMLInputElement, foundValue: HTMLSpanElement) {
-  console.log('getData');
+  // console.log('getData');
   fetch('https://dummyjson.com/products?limit=100')
     .then((response) => {
       return response.json();
@@ -144,7 +144,8 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
             }
           }
         });
-
+        console.log(newProdBrand);
+        console.log(newProdCategory);
         newProdCategory.forEach((prodC) => {
           newProdBrand.forEach((prodB) => {
             if (prodC === prodB) {
@@ -152,10 +153,10 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
             }
           });
         });
+        console.log(finishArr);
         if (!finishArr.length) {
-          console.log('peoductsArr!!!')
+          console.log('peoductsArr!!!');
           window.localStorage.setItem('productsArr', JSON.stringify(products));
-
         }
         const searchArr = finishArr.filter((item) => {
           if (
@@ -169,8 +170,8 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
             return item;
           }
         });
+        console.log(searchArr);
 
-        window.localStorage.setItem('productsArr', JSON.stringify(searchArr));
         createProducts(searchArr, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
 
         const rangePriceArr = searchArr.filter((item) => {
@@ -183,13 +184,16 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
             return item;
           }
         });
+        console.log(rangePriceArr);
+        window.localStorage.setItem('productsArr', JSON.stringify(rangePriceArr));
+        createProducts(rangePriceArr, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
 
         const fullUrl = '#main?' + myParams.toString();
         history.pushState(window.location.href, '#', fullUrl);
+
         if (checkedYesOrNot === false) {
           createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
         }
-        createProducts(rangePriceArr, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
       };
 
       filterSection?.addEventListener('click', () => {

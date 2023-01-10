@@ -143,7 +143,7 @@ export default function createPopap(thisMain: HTMLElement, btnBtn: HTMLElement) 
   });
   inputAdress.addEventListener('blur', () => {
     if (inputAdress.value != '') {
-      if (inputAdress.value.split(' ').length < 2) {
+      if (inputAdress.value.split(' ').length < 3) {
         if (!adress.querySelector('.error')) {
           const textError = document.createElement('div');
           textError.className = 'error';
@@ -350,7 +350,12 @@ export default function createPopap(thisMain: HTMLElement, btnBtn: HTMLElement) 
       numberCardInput.value += ' ';
     }
     if (numberCardInput.value.length === 19) {
-      if (cardData.querySelector('.error')) {
+      if (
+        cardData.querySelector('.error') &&
+        inputDate.value.length === 5 &&
+        inputCvv.value.length === 3 &&
+        Number(inputDate.value.split('/')[0]) <= 12
+      ) {
         cardData.removeChild(cardData.querySelector('.error') as Element);
       }
     }
@@ -368,7 +373,7 @@ export default function createPopap(thisMain: HTMLElement, btnBtn: HTMLElement) 
     if (inputDate.value.length === 2) {
       inputDate.value += '/';
     }
-    if (Number(inputDate.value.split('')[0]) == 0 && Number(inputDate.value.split('')[1]) == 0) {
+    if (Number(inputDate.value.split('/')[0]) === 0) {
       if (!cardData.querySelector('.error')) {
         const textError = document.createElement('div');
         textError.className = 'error';
@@ -377,7 +382,7 @@ export default function createPopap(thisMain: HTMLElement, btnBtn: HTMLElement) 
       }
       return;
     }
-    if (Number(inputDate.value.split('')[0]) > 1) {
+    if (Number(inputDate.value.split('/')[0]) > 12) {
       if (!cardData.querySelector('.error')) {
         const textError = document.createElement('div');
         textError.className = 'error';
@@ -385,19 +390,6 @@ export default function createPopap(thisMain: HTMLElement, btnBtn: HTMLElement) 
         cardData.appendChild(textError);
       }
       return;
-    } else {
-      if (Number(inputDate.value.split('')[1]) > 2) {
-        if (!cardData.querySelector('.error')) {
-          const textError = document.createElement('div');
-          textError.className = 'error';
-          textError.innerHTML = 'error';
-          cardData.appendChild(textError);
-          return;
-        }
-      }
-      if (cardData.querySelector('.error')) {
-        cardData.removeChild(cardData.querySelector('.error') as Element);
-      }
     }
   });
   inputCvv.maxLength = 3;
@@ -406,7 +398,12 @@ export default function createPopap(thisMain: HTMLElement, btnBtn: HTMLElement) 
       e.preventDefault();
     }
     if (inputCvv.value.length === 3) {
-      if (cardData.querySelector('.error')) {
+      if (
+        cardData.querySelector('.error') &&
+        inputDate.value.length === 5 &&
+        inputCvv.value.length === 3 &&
+        Number(inputDate.value.split('/')[0]) <= 12
+      ) {
         cardData.removeChild(cardData.querySelector('.error') as Element);
       }
     }
