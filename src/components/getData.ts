@@ -3,7 +3,7 @@ import { JSONresponse } from '../types';
 import { createList, createProducts, createRange } from './createPageElements';
 
 export default function getData(searchInput: HTMLInputElement, foundValue: HTMLSpanElement) {
-  console.log('getData');
+  // console.log('getData');
   fetch('https://dummyjson.com/products?limit=100')
     .then((response) => {
       return response.json();
@@ -77,6 +77,8 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
 
       const inputCheckbox = document.querySelectorAll('input');
       const filterSection = document.querySelector('.filter__section');
+      const selectBar = document.querySelector('.header__select_bar');
+      const option = document.querySelectorAll('.select_bar__option');
 
       const leftBorder = document.querySelectorAll('.left__border');
       const rightBorder = document.querySelectorAll('.right__border');
@@ -144,7 +146,6 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
             }
           }
         });
-
         newProdCategory.forEach((prodC) => {
           newProdBrand.forEach((prodB) => {
             if (prodC === prodB) {
@@ -153,9 +154,8 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
           });
         });
         if (!finishArr.length) {
-          console.log('peoductsArr!!!')
+          // console.log('peoductsArr!!!');
           window.localStorage.setItem('productsArr', JSON.stringify(products));
-
         }
         const searchArr = finishArr.filter((item) => {
           if (
@@ -170,7 +170,6 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
           }
         });
 
-        window.localStorage.setItem('productsArr', JSON.stringify(searchArr));
         createProducts(searchArr, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
 
         const rangePriceArr = searchArr.filter((item) => {
@@ -184,18 +183,43 @@ export default function getData(searchInput: HTMLInputElement, foundValue: HTMLS
           }
         });
 
+        if ((option[0] as HTMLSelectElement).value === (selectBar as HTMLSelectElement).value) {
+          rangePriceArr.sort((a, b) => {
+            return a.price - b.price;
+          });
+        } else if ((option[1] as HTMLSelectElement).value === (selectBar as HTMLSelectElement).value) {
+          rangePriceArr.sort((a, b) => {
+            return b.price - a.price;
+          });
+        } else if ((option[2] as HTMLSelectElement).value === (selectBar as HTMLSelectElement).value) {
+          rangePriceArr.sort((a, b) => {
+            return a.rating - b.rating;
+          });
+        } else if ((option[3] as HTMLSelectElement).value === (selectBar as HTMLSelectElement).value) {
+          rangePriceArr.sort((a, b) => {
+            return b.rating - a.rating;
+          });
+        }
+
+        window.localStorage.setItem('productsArr', JSON.stringify(rangePriceArr));
+        createProducts(rangePriceArr, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
+
         const fullUrl = '#main?' + myParams.toString();
         history.pushState(window.location.href, '#', fullUrl);
+
         if (checkedYesOrNot === false) {
           createProducts(products, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
         }
-        createProducts(rangePriceArr, document.querySelector('.products__field') as HTMLTemplateElement, foundValue);
       };
 
       filterSection?.addEventListener('click', () => {
         filterFunc();
       });
       searchInput.addEventListener('input', function () {
+        filterFunc();
+      });
+
+      selectBar?.addEventListener('change', () => {
         filterFunc();
       });
       // const toCheck = (e: number | string, e1: number | string): string => {

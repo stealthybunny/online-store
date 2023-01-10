@@ -3,7 +3,7 @@ import { checkLS } from './addToCart';
 import { totalAndAmount } from './summaryCreation';
 
 function getStorage() {
-  console.log('getStorage');
+  // console.log('getStorage');
   const storage: lsObject[] = JSON.parse(window.localStorage.getItem('online_store__storage') as string);
   let amount = 0;
   let price = 0;
@@ -15,10 +15,10 @@ function getStorage() {
 }
 
 function storageCheck(productsAmount: HTMLElement, totalCost: HTMLElement) {
-  console.log('Im working rigth now');
-  console.log(productsAmount, totalCost);
+  // console.log('Im working rigth now');
+  // console.log(productsAmount, totalCost);
   const results: number[] = getStorage();
-  console.log(results);
+  // console.log(results);
   productsAmount.innerText = ` ${results[0]}`;
   totalCost.innerText = ` ${results[1]}.00 \u20ac`;
 }
@@ -182,7 +182,7 @@ function pagesCountSet(
     currentPageText.innerText = `${currentPage}`;
     createProductList(productsPerPage, currentPage, storage, productField, totalCost, summaryAmount, productsInCart);
   }
-  console.log(pagesCount, 'pages');
+  // console.log(pagesCount, 'pages');
   return pagesCount;
 }
 

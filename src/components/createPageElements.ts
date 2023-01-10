@@ -40,7 +40,7 @@ export function createRange(place: HTMLTemplateElement, data?: number[]): void {
   data?.sort(function (a: number, b: number): number {
     return a - b;
   });
-  console.log(data);
+  // console.log(data);
 
   inputRangeleft.className = 'input__range input__range-left';
   inputRangeRight.className = 'input__range input__range-right';
@@ -116,7 +116,7 @@ export function createProducts(
   const productsArr: productDatum[] = JSON.parse(window.localStorage.getItem('productsArr') as string);
   if (productsArr) {
     productData = productsArr;
-  } 
+  }
   const size = window.localStorage.getItem('size');
   if (!productData.length) {
     foundValue.innerText = '0';
